@@ -15,6 +15,7 @@ import type {
 } from "@/lib/api/types";
 import { siteConfig } from "@/lib/config";
 import * as mock from "./mock-data";
+import { withCategoryArt, withCollectionArt, withPlaceholderArt } from "./art";
 import { DEFAULT_PAGE_SIZE, facetsFor, queryProducts, toSummary } from "./search";
 
 const useApi = siteConfig.dataSource === "api";
@@ -23,7 +24,7 @@ export async function getCategories(): Promise<Category[]> {
   "use cache";
   cacheLife("hours");
   cacheTag("categories");
-  if (useApi) return apiFetch<Category[]>("/categories/");
+  if (useApi) return (await apiFetch<Category[]>("/categories/")).map(withCategoryArt);
   return mock.categories;
 }
 
@@ -36,7 +37,7 @@ export async function getCollections(): Promise<Collection[]> {
   "use cache";
   cacheLife("hours");
   cacheTag("collections");
-  if (useApi) return apiFetch<Collection[]>("/collections/");
+  if (useApi) return (await apiFetch<Collection[]>("/collections/")).map(withCollectionArt);
   return mock.collections;
 }
 
@@ -50,9 +51,10 @@ export async function getProducts(query: ProductQuery = {}): Promise<Paginated<P
   cacheLife("minutes");
   cacheTag("products");
   if (useApi) {
-    return apiFetch<Paginated<ProductSummary>>(
+    const page = await apiFetch<Paginated<ProductSummary>>(
       `/products/${toQueryString({ page_size: DEFAULT_PAGE_SIZE, ...query })}`,
     );
+    return { ...page, results: page.results.map(withPlaceholderArt) };
   }
   return queryProducts(mock.products, query, mock.popularity);
 }
@@ -63,7 +65,7 @@ export async function getProduct(slug: string): Promise<ProductDetail | null> {
   cacheTag("products", `product-${slug}`);
   if (useApi) {
     try {
-      return await apiFetch<ProductDetail>(`/products/${encodeURIComponent(slug)}/`);
+      return withPlaceholderArt(await apiFetch<ProductDetail>(`/products/${encodeURIComponent(slug)}/`));
     } catch (error) {
       if ((error as { status?: number }).status === 404) return null;
       throw error;

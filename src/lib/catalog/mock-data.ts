@@ -16,6 +16,7 @@ import type {
   Variant,
 } from "@/lib/api/types";
 import { hashString } from "@/lib/utils";
+import { artFor } from "./art";
 
 export const COLOURS: Record<string, string> = {
   Indigo: "#1e2a4a",
@@ -30,20 +31,6 @@ export const COLOURS: Record<string, string> = {
   "Royal blue": "#27408b",
 };
 
-const PALETTES: Record<string, string[]> = {
-  Indigo: ["#1e2a4a", "#efe7d6", "#3d5283", "#b98a2e"],
-  Earth: ["#6b4a2f", "#ead9bb", "#a4472a", "#1b1a17"],
-  Natural: ["#e6d8bd", "#2b2926", "#a4472a", "#6b4a2f"],
-  Kola: ["#b98a2e", "#f4ead4", "#5a3d1e", "#1e2a4a"],
-  Oxblood: ["#6e1f1f", "#ecdcc0", "#1b1a17", "#b98a2e"],
-  Forest: ["#2f4f3a", "#ebe1c9", "#c79b3b", "#1b1a17"],
-  Charcoal: ["#2b2926", "#f2ece0", "#8c8478", "#a4472a"],
-  "Ivory lace": ["#f3ecdc", "#d9c9a8", "#b98a2e", "#6b4a2f"],
-  Blush: ["#e2b6a3", "#f6ece4", "#a4472a", "#6b4a2f"],
-  "Royal blue": ["#27408b", "#f0e9da", "#b98a2e", "#16224a"],
-};
-
-const BACKDROPS = ["#ece4d6", "#e6dccb", "#efe9df", "#e2d7c3"];
 
 export const categories: Category[] = [
   {
@@ -546,15 +533,7 @@ function slugify(value: string) {
     .replace(/(^-|-$)/g, "");
 }
 
-function art(kind: GarmentKind, colour: string, seed: number, view: ArtSpec["view"] = "front"): ArtSpec {
-  return {
-    kind,
-    view,
-    palette: PALETTES[colour] ?? PALETTES.Indigo,
-    seed,
-    backdrop: BACKDROPS[seed % BACKDROPS.length],
-  };
-}
+const art = artFor;
 
 const REVIEW_SAMPLES: Omit<Review, "id" | "created_at">[] = [
   {

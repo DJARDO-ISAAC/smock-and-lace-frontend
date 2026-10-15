@@ -1,6 +1,8 @@
 import { apiFetch } from "@/lib/api/client";
 import type { AddCartItemInput, Cart, CartLine } from "@/lib/api/types";
+import { artFor, guessKind } from "@/lib/catalog/art";
 import { imageForColour } from "@/lib/catalog/images";
+import { hashString } from "@/lib/utils";
 import { findVariant } from "@/lib/catalog/mock-data";
 import { siteConfig } from "@/lib/config";
 import { readCartToken, writeCartToken } from "./token";
@@ -33,8 +35,16 @@ function apiCall(path: string, init: { method?: string; body?: unknown }, access
   }).then((cart) => {
     // Customers' carts have no token; drop any stale guest token once merged.
     writeCartToken(cart.token);
-    return cart;
+    return withLineArt(cart);
   });
+}
+
+/** Lines without a photo get the same generated artwork as their product. */
+function withLineArt(cart: Cart): Cart {
+  return {
+    ...cart,
+    items: cart.items.map((l) => (l.image ? l : { ...l, art: artFor(guessKind(l.product_name), l.colour, hashString(l.product_slug)) })),
+  };
 }
 
 const apiBackend: CartBackend = {

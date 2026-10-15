@@ -40,10 +40,10 @@ Response types are in `src/lib/api/types.ts`. Money is always in integer pesewas
 | `GET/PATCH /me/`, CRUD `/me/addresses/`, `/me/measurements/` | ✅ exists | account area, checkout prefill |
 | `GET/DELETE /cart/`, `POST /cart/items/`, `PATCH/DELETE /cart/items/{id}/` | ✅ exists | cart (api mode) |
 | `POST/DELETE /cart/discount/` | ⏳ to build | discount code field |
-| `GET /categories/`, `/collections/` | ⏳ to build | navigation, listings |
-| `GET /products/?category=&collection=&q=&size=&colour=&origin=&min_price=&max_price=&in_stock=&made_to_order=&ordering=&page=&page_size=&slug=` | ⏳ to build | listings, search, wishlist |
-| `GET /products/{slug}/` (with `variants`, `images`, `reviews`, story fields) | ⏳ to build | product page |
-| `GET /products/facets/?category=&collection=` | ⏳ to build | filter options |
+| `GET /categories/`, `/collections/` | ✅ exists | navigation, listings |
+| `GET /products/?category=&collection=&q=&size=&colour=&origin=&min_price=&max_price=&in_stock=&made_to_order=&ordering=&page=&page_size=&slug=` | ✅ exists | listings, search, wishlist |
+| `GET /products/{slug}/` (with `variants`, `images`, `reviews`, story fields) | ✅ exists | product page |
+| `GET /products/facets/?category=&collection=` | ✅ exists | filter options |
 | `GET /shipping/quote/?country=&region=` | ⏳ to build | checkout delivery options |
 | `POST /checkout/`, `POST /payments/initialize/` (returns `payment_url`) | ⏳ to build | checkout |
 | `GET /orders/`, `/orders/{number}/`, `/orders/{number}/invoice/`, `POST /orders/{number}/return-request/` | ⏳ to build | confirmation, order history |
@@ -73,7 +73,7 @@ Design tokens (colours, fonts, motion) live in `src/app/globals.css` under `@the
 
 ## Placeholder content to replace before launch
 
-- **Product photos:** cards and galleries draw generated strip-cloth artwork (`ProductArt`) whenever an image has no `url`. Real photos from Cloudinary replace it automatically.
+- **Product photos:** cards and galleries draw generated strip-cloth artwork (`ProductArt`) whenever an image has no `url`, in both modes (`src/lib/catalog/art.ts`). Photos uploaded in the Django admin replace it automatically.
 - **Sample catalogue, reviews and home-page testimonials:** these are illustrative.
 - **Contact details:** set the phone, email, address and Instagram handle in `src/lib/config.ts`.
 - **Policies:** the privacy policy and terms of sale are drafts and need legal review (Act 843).
