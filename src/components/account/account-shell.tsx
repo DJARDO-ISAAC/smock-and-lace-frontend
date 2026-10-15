@@ -33,9 +33,9 @@ export function AccountShell({ active, title, description, children, requireAuth
 
   return (
     <Container className="py-10 sm:py-14">
-      <div className="grid gap-10 lg:grid-cols-[220px_1fr] lg:gap-14">
+      <div className="grid grid-cols-[minmax(0,1fr)] gap-10 lg:grid-cols-[220px_minmax(0,1fr)] lg:gap-14">
         {user && (
-          <nav aria-label="Account" className="lg:sticky lg:top-28 lg:self-start">
+          <nav aria-label="Account" className="min-w-0 lg:sticky lg:top-28 lg:self-start">
             <p className="eyebrow mb-4 hidden text-muted lg:block">My account</p>
             <ul className="-mx-4 flex gap-2 overflow-x-auto px-4 scrollbar-none lg:mx-0 lg:flex-col lg:gap-1 lg:px-0">
               {NAV.map(({ href, label, icon: Icon }) => (

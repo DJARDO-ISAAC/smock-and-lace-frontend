@@ -18,7 +18,7 @@ const schema = z.object({
   phone: z
     .string()
     .trim()
-    .refine((v) => !v || GHANA_PHONE.test(normalisePhone(v)) || INTL_PHONE.test(normalisePhone(v)), "Enter a valid phone number, like 024 123 4567."),
+    .refine((v) => !v || GHANA_PHONE.test(normalisePhone(v)) || INTL_PHONE.test(normalisePhone(v)), "Enter a Ghana number like 024 123 4567, or include your country code, like +44 7700 900123."),
   password: passwordSchema,
 });
 type Values = z.infer<typeof schema>;

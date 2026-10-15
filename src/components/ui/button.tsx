@@ -7,7 +7,7 @@ type Variant = "primary" | "secondary" | "outline" | "ghost" | "link" | "clay";
 type Size = "sm" | "md" | "lg" | "icon";
 
 const base =
-  "inline-flex items-center justify-center gap-2 whitespace-nowrap font-medium transition-[background-color,color,border-color,box-shadow,transform] duration-200 ease-out disabled:pointer-events-none disabled:opacity-50 active:translate-y-px select-none";
+  "inline-flex items-center justify-center gap-2 whitespace-nowrap font-medium transition-[background-color,color,border-color,box-shadow,transform] duration-200 ease-out disabled:pointer-events-none aria-disabled:pointer-events-none active:translate-y-px select-none";
 
 const variants: Record<Variant, string> = {
   primary: "bg-indigo text-cotton hover:bg-indigo-deep shadow-[inset_0_-1px_0_rgb(0_0_0/0.2)]",
@@ -18,6 +18,19 @@ const variants: Record<Variant, string> = {
   link: "text-ink underline underline-offset-4 decoration-ink/30 hover:decoration-ink px-0 h-auto",
 };
 
+/**
+ * Unavailable buttons go neutral instead of a faded brand colour, which read as broken.
+ * Loading buttons are also disabled (no double submits) but keep their colour and show a spinner.
+ */
+const inactive: Record<Variant, string> = {
+  primary: "bg-ink/[0.07] text-ink/40 shadow-none",
+  clay: "bg-ink/[0.07] text-ink/40",
+  secondary: "bg-cotton-deep text-ink/40",
+  outline: "border-ink/10 text-ink/40",
+  ghost: "text-ink/40",
+  link: "text-ink/40 decoration-ink/15",
+};
+
 const sizes: Record<Size, string> = {
   sm: "h-9 px-4 text-sm rounded-full",
   md: "h-11 px-6 text-[0.9375rem] rounded-full",
@@ -25,15 +38,21 @@ const sizes: Record<Size, string> = {
   icon: "size-10 rounded-full",
 };
 
-export function buttonClasses({ variant = "primary", size = "md", className }: { variant?: Variant; size?: Size; className?: string } = {}) {
-  return cn(base, variants[variant], variant !== "link" && sizes[size], className);
+export function buttonClasses({
+  variant = "primary",
+  size = "md",
+  className,
+  unavailable,
+  loading,
+}: { variant?: Variant; size?: Size; className?: string; unavailable?: boolean; loading?: boolean } = {}) {
+  return cn(base, variants[variant], variant !== "link" && sizes[size], unavailable && inactive[variant], loading && "cursor-wait opacity-85", className);
 }
 
 type ButtonProps = ComponentProps<"button"> & { variant?: Variant; size?: Size; loading?: boolean; icon?: ReactNode };
 
 export function Button({ variant, size, loading, icon, className, children, disabled, ...props }: ButtonProps) {
   return (
-    <button className={buttonClasses({ variant, size, className })} disabled={disabled || loading} aria-busy={loading || undefined} {...props}>
+    <button className={buttonClasses({ variant, size, className, unavailable: disabled && !loading, loading })} disabled={disabled || loading} aria-busy={loading || undefined} {...props}>
       {loading ? <Spinner className="size-4" /> : icon}
       {children}
     </button>
@@ -43,5 +62,6 @@ export function Button({ variant, size, loading, icon, className, children, disa
 type LinkButtonProps = ComponentProps<typeof Link> & { variant?: Variant; size?: Size };
 
 export function LinkButton({ variant, size, className, ...props }: LinkButtonProps) {
-  return <Link className={buttonClasses({ variant, size, className })} {...props} />;
+  const unavailable = props["aria-disabled"] === true || props["aria-disabled"] === "true";
+  return <Link className={buttonClasses({ variant, size, className, unavailable })} {...props} />;
 }
