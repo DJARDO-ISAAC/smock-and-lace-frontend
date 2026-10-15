@@ -1,0 +1,16 @@
+# Weekly update PRs for npm packages and GitHub Actions; CI runs on each one.
+version: 2
+updates:
+  - package-ecosystem: npm
+    directory: /
+    schedule:
+      interval: weekly
+    open-pull-requests-limit: 5
+    groups:
+      # Next.js, React and their types move together.
+      next-react:
+        patterns: ["next", "eslint-config-next", "react", "react-dom", "@types/react", "@types/react-dom"]
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: weekly
