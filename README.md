@@ -44,9 +44,10 @@ Response types are in `src/lib/api/types.ts`. Money is always in integer pesewas
 | `GET /products/?category=&collection=&q=&size=&colour=&origin=&min_price=&max_price=&in_stock=&made_to_order=&ordering=&page=&page_size=&slug=` | ✅ exists | listings, search, wishlist |
 | `GET /products/{slug}/` (with `variants`, `images`, `reviews`, story fields) | ✅ exists | product page |
 | `GET /products/facets/?category=&collection=` | ✅ exists | filter options |
-| `GET /shipping/quote/?country=&region=` | ⏳ to build | checkout delivery options |
-| `POST /checkout/`, `POST /payments/initialize/` (returns `payment_url`) | ⏳ to build | checkout |
-| `GET /orders/`, `/orders/{number}/`, `/orders/{number}/invoice/`, `POST /orders/{number}/return-request/` | ⏳ to build | confirmation, order history |
+| `GET /shipping/quote/?country=&region=` | ✅ exists | checkout delivery options |
+| `POST /checkout/`, `POST /payments/initialize/`, `GET /payments/verify/`, `POST /payments/webhook/` | ✅ exists | checkout, payment, confirmation |
+| `GET /orders/`, `/orders/{number}/` (guests add `?key=`) | ✅ exists | confirmation, order history |
+| `GET /orders/{number}/invoice/`, `POST /orders/{number}/return-request/` | ⏳ to build | invoice download, returns |
 | `POST /auth/password-reset/` | ⏳ to build | forgot password |
 | `POST /newsletter/`, `/stock-alerts/` | ⏳ to build | newsletter, back-in-stock alerts |
 

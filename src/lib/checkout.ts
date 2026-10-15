@@ -5,6 +5,48 @@ import { siteConfig } from "@/lib/config";
 import { addDays } from "@/lib/utils";
 
 const ORDERS_KEY = "sl_mock_orders";
+const ORDER_KEYS = "sl_order_keys";
+
+/** Guests prove they own an order with the key from checkout (or the confirmation email link). */
+export function rememberOrderKey(number: string, key: string) {
+  try {
+    const keys = JSON.parse(localStorage.getItem(ORDER_KEYS) || "{}");
+    keys[number] = key;
+    // Keep the most recent few only.
+    const recent = Object.fromEntries(Object.entries(keys).slice(-10));
+    localStorage.setItem(ORDER_KEYS, JSON.stringify(recent));
+  } catch {
+    /* storage blocked: the email link still works */
+  }
+}
+
+export function orderKey(number: string): string | null {
+  try {
+    return JSON.parse(localStorage.getItem(ORDER_KEYS) || "{}")[number] ?? null;
+  } catch {
+    return null;
+  }
+}
+
+/** Start (or retry) the gateway payment for a pending order and return the payment page URL. */
+export async function startPayment(number: string, access: string | null): Promise<string> {
+  const result = await apiFetch<{ payment_url: string }>("/payments/initialize/", {
+    method: "POST",
+    body: { order_number: number, callback_url: `${window.location.origin}/order/${number}/confirmation`, key: orderKey(number) ?? "" },
+    token: access,
+  });
+  return result.payment_url;
+}
+
+export type PaymentCheck = { payment_status: "initialized" | "success" | "failed" | "abandoned"; order_status: string };
+
+/** After the gateway redirects back: the server asks the gateway, never trusting the redirect alone. */
+export async function verifyPayment(reference: string, number: string, access: string | null): Promise<PaymentCheck> {
+  const key = orderKey(number);
+  return apiFetch<PaymentCheck>(`/payments/verify/?reference=${encodeURIComponent(reference)}${key ? `&key=${encodeURIComponent(key)}` : ""}`, {
+    token: access,
+  });
+}
 
 /**
  * API flow (SRS 7.3): POST /checkout/ re-prices and reserves stock, then POST /payments/initialize/
@@ -13,14 +55,9 @@ const ORDERS_KEY = "sl_mock_orders";
 export async function placeOrder(input: CheckoutInput, access: string | null, cart: Cart, delivery: DeliveryOption): Promise<CheckoutResult> {
   if (siteConfig.dataSource === "api") {
     const order = await apiFetch<Order>("/checkout/", { method: "POST", body: input, token: access, cartToken: readCartToken() });
+    if (order.access_key) rememberOrderKey(order.number, order.access_key);
     if (input.payment_method === "pay_on_delivery") return { order, payment_url: null };
-    const payment = await apiFetch<{ payment_url: string }>("/payments/initialize/", {
-      method: "POST",
-      body: { order_number: order.number, callback_url: `${window.location.origin}/order/${order.number}/confirmation` },
-      token: access,
-      cartToken: readCartToken(),
-    });
-    return { order, payment_url: payment.payment_url };
+    return { order, payment_url: await startPayment(order.number, access) };
   }
 
   // Mock mode: simulate the round trip and keep the order in this browser.
@@ -77,8 +114,9 @@ export function loadMockOrders(): Order[] {
 
 export async function fetchOrder(number: string, access: string | null): Promise<Order | null> {
   if (siteConfig.dataSource === "api") {
+    const key = orderKey(number);
     try {
-      return await apiFetch<Order>(`/orders/${encodeURIComponent(number)}/`, { token: access });
+      return await apiFetch<Order>(`/orders/${encodeURIComponent(number)}/${key ? `?key=${encodeURIComponent(key)}` : ""}`, { token: access });
     } catch {
       return null;
     }

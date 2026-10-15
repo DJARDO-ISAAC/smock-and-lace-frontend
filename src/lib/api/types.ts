@@ -238,6 +238,8 @@ export type DeliveryOption = {
   fee: number;
   eta_days_min: number;
   eta_days_max: number;
+  /** The method lets the customer pay the rider instead of paying online. */
+  allows_pay_on_delivery?: boolean;
 };
 
 export type PaymentMethod = "momo" | "card" | "pay_on_delivery";
@@ -297,12 +299,14 @@ export type Order = {
   currency: string;
   delivery_option: DeliveryOption;
   shipping_address: CheckoutInput["shipping_address"];
-  payment_method: PaymentMethod;
+  payment_method: PaymentMethod | "manual";
   expected_ship_date: string | null;
   tracking_number: string;
   courier: string;
   created_at: string;
   status_history: { status: OrderStatus; at: string; note: string }[];
+  /** Only in the checkout response: lets a guest open this order later. */
+  access_key?: string;
 };
 
 export type CheckoutResult = {

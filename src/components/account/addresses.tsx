@@ -7,7 +7,7 @@ import { z } from "zod";
 import { MapPin, Plus } from "lucide-react";
 import type { Address } from "@/lib/api/types";
 import { ApiError } from "@/lib/api/client";
-import { COUNTRIES, GHANA_REGIONS } from "@/lib/shipping";
+import { COUNTRIES, GHANA_REGIONS, countryName } from "@/lib/shipping";
 import { toast } from "@/stores/toast";
 import { Button } from "@/components/ui/button";
 import { Dialog } from "@/components/ui/dialog";
@@ -29,7 +29,7 @@ const schema = z.object({
 });
 type Values = z.infer<typeof schema>;
 
-const EMPTY: Values = { full_name: "", phone: "", line1: "", line2: "", city: "Accra", region: "Greater Accra", country: "Ghana", postal_code: "", is_default: false };
+const EMPTY: Values = { full_name: "", phone: "", line1: "", line2: "", city: "Accra", region: "Greater Accra", country: "GH", postal_code: "", is_default: false };
 
 function AddressForm({ initial, onSubmit, onCancel }: { initial: Values; onSubmit: (v: Values) => Promise<void>; onCancel: () => void }) {
   const [error, setError] = useState("");
@@ -68,12 +68,14 @@ function AddressForm({ initial, onSubmit, onCancel }: { initial: Values; onSubmi
         <Field label="Country" htmlFor="a-country">
           <Select id="a-country" {...register("country")}>
             {COUNTRIES.map((c) => (
-              <option key={c}>{c}</option>
+              <option key={c.code} value={c.code}>
+                {c.name}
+              </option>
             ))}
           </Select>
         </Field>
-        <Field label={country === "Ghana" ? "Region" : "State / county"} htmlFor="a-region">
-          {country === "Ghana" ? (
+        <Field label={country === "GH" ? "Region" : "State / county"} htmlFor="a-region">
+          {country === "GH" ? (
             <Select id="a-region" {...register("region")}>
               {GHANA_REGIONS.map((r) => (
                 <option key={r}>{r}</option>
@@ -144,7 +146,7 @@ export function Addresses() {
                 <br />
                 {a.city}, {a.region}
                 <br />
-                {a.country}
+                {countryName(a.country)}
                 <br />
                 {a.phone}
               </address>

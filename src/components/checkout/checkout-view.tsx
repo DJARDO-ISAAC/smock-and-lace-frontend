@@ -11,7 +11,7 @@ import type { Address, DeliveryOption, PaymentMethod } from "@/lib/api/types";
 import { ApiError } from "@/lib/api/client";
 import { siteConfig } from "@/lib/config";
 import { formatGHS } from "@/lib/money";
-import { COUNTRIES, GHANA_REGIONS, getDeliveryOptions, zoneFor } from "@/lib/shipping";
+import { COUNTRIES, GHANA_REGIONS, countryName, getDeliveryOptions } from "@/lib/shipping";
 import { placeOrder } from "@/lib/checkout";
 import { emailSchema, formatGhanaPhone, GHANA_PHONE, INTL_PHONE, normalisePhone } from "@/lib/validation";
 import { cn } from "@/lib/utils";
@@ -42,14 +42,11 @@ const schema = z
   })
   .superRefine((v, ctx) => {
     const phone = normalisePhone(v.phone);
-    if (v.country === "Ghana") {
+    if (v.country === "GH") {
       if (!GHANA_PHONE.test(phone)) ctx.addIssue({ code: "custom", path: ["phone"], message: "Enter a Ghana number, like 024 123 4567." });
       if (!v.region) ctx.addIssue({ code: "custom", path: ["region"], message: "Choose your region." });
     } else if (!INTL_PHONE.test(phone)) {
       ctx.addIssue({ code: "custom", path: ["phone"], message: "Enter your number with country code, like +44 7700 900123." });
-    }
-    if (v.payment_method === "pay_on_delivery" && zoneFor(v.country, v.region) !== "accra") {
-      ctx.addIssue({ code: "custom", path: ["payment_method"], message: "Pay on delivery is only available in Accra and Tema." });
     }
   });
 
@@ -87,7 +84,7 @@ function StepHeader({ n, title, step, summary, onEdit }: { n: number; title: str
 const PAYMENT_OPTIONS: { value: PaymentMethod; title: string; text: string; icon: typeof Smartphone }[] = [
   { value: "momo", title: "Mobile Money", text: "MTN MoMo, Telecel Cash or AT Money. Approve the prompt on your phone.", icon: Smartphone },
   { value: "card", title: "Debit or credit card", text: "Visa or Mastercard, with 3-D Secure.", icon: CreditCard },
-  { value: "pay_on_delivery", title: "Pay on delivery", text: "Accra & Tema only. Pay the rider by MoMo or cash.", icon: Wallet },
+  { value: "pay_on_delivery", title: "Pay on delivery", text: "Pay when your order arrives, by MoMo or cash.", icon: Wallet },
 ];
 
 export function CheckoutView() {
@@ -110,7 +107,7 @@ export function CheckoutView() {
       email: "",
       phone: "",
       full_name: "",
-      country: "Ghana",
+      country: "GH",
       region: "Greater Accra",
       city: "Accra",
       line1: "",
@@ -155,12 +152,12 @@ export function CheckoutView() {
     setValue("line2", a.line2, opts);
     setValue("city", a.city, opts);
     setValue("region", a.region, opts);
-    setValue("country", a.country || "Ghana", opts);
+    setValue("country", a.country || "GH", opts);
     setValue("postal_code", a.postal_code, opts);
   }
 
   // Delivery options and fees depend on where it's going (FR-CHK-3).
-  const quoteKey = `${country}|${country === "Ghana" ? region : ""}`;
+  const quoteKey = `${country}|${country === "GH" ? region : ""}`;
   const options = quote?.key === quoteKey ? quote.list : null;
   useEffect(() => {
     let live = true;
@@ -177,11 +174,13 @@ export function CheckoutView() {
     };
   }, [quoteKey, getValues, setValue]);
 
-  useEffect(() => {
-    if (payment === "pay_on_delivery" && zoneFor(country, region) !== "accra") setValue("payment_method", "momo");
-  }, [country, region, payment, setValue]);
-
   const delivery = useMemo(() => options?.find((o) => o.id === deliveryId) ?? null, [options, deliveryId]);
+  // Pay on delivery depends on the chosen delivery method (e.g. Accra riders), as configured in the admin.
+  const canPayOnDelivery = Boolean(delivery?.allows_pay_on_delivery);
+
+  useEffect(() => {
+    if (payment === "pay_on_delivery" && !canPayOnDelivery) setValue("payment_method", "momo");
+  }, [canPayOnDelivery, payment, setValue]);
   const blocked = cart?.items.some((l) => l.warning && BLOCKING_WARNINGS.has(l.warning));
   const total = (cart?.total ?? 0) + (delivery?.fee ?? 0);
 
@@ -201,7 +200,7 @@ export function CheckoutView() {
       const result = await placeOrder(
         {
           email: values.email,
-          phone: values.country === "Ghana" ? formatGhanaPhone(values.phone) : normalisePhone(values.phone),
+          phone: values.country === "GH" ? formatGhanaPhone(values.phone) : normalisePhone(values.phone),
           full_name: values.full_name,
           shipping_address: { line1: values.line1, line2: values.line2, city: values.city, region: values.region, country: values.country, postal_code: values.postal_code },
           delivery_option: values.delivery_option,
@@ -222,7 +221,14 @@ export function CheckoutView() {
     } catch (error) {
       setPlacing(false);
       if (error instanceof ApiError && Object.keys(error.fields).length) {
-        Object.entries(error.fields).forEach(([k, v]) => form.setError(k as keyof FormValues, { message: Array.isArray(v) ? v[0] : String(v) }));
+        // Address errors arrive nested under shipping_address; the form keeps those fields at the top level.
+        const { shipping_address: address, ...rest } = error.fields as Record<string, unknown>;
+        const flat = { ...rest, ...(address && typeof address === "object" ? (address as Record<string, unknown>) : {}) };
+        Object.entries(flat).forEach(([k, v]) => {
+          if (k in values) form.setError(k as keyof FormValues, { message: Array.isArray(v) ? String(v[0]) : String(v) });
+        });
+        const firstStep = STEPS.find((st) => st.fields.some((f) => f in flat));
+        if (firstStep && firstStep.n < step) setStep(firstStep.n);
       }
       setSubmitError((error as Error).message || "We couldn't place your order. Please try again.");
       loadCart();
@@ -256,7 +262,7 @@ export function CheckoutView() {
   }
 
   const card = "rounded-2xl bg-white/80 p-5 ring-1 ring-line sm:p-7";
-  const addressSummary = [getValues("line1"), getValues("city"), getValues("country") === "Ghana" ? getValues("region") : getValues("country")].filter(Boolean).join(", ");
+  const addressSummary = [getValues("line1"), getValues("city"), getValues("country") === "GH" ? getValues("region") : countryName(getValues("country"))].filter(Boolean).join(", ");
 
   return (
     <div className="mx-auto max-w-6xl px-4 py-8 sm:px-6 sm:py-12">
@@ -345,11 +351,13 @@ export function CheckoutView() {
                   <Field label="Country" htmlFor="country">
                     <Select id="country" autoComplete="country-name" {...register("country")}>
                       {COUNTRIES.map((c) => (
-                        <option key={c}>{c}</option>
+                        <option key={c.code} value={c.code}>
+                          {c.name}
+                        </option>
                       ))}
                     </Select>
                   </Field>
-                  {country === "Ghana" ? (
+                  {country === "GH" ? (
                     <Field label="Region" htmlFor="region" error={errors.region?.message}>
                       <Select id="region" autoComplete="address-level1" aria-invalid={!!errors.region || undefined} {...register("region")}>
                         {GHANA_REGIONS.map((r) => (
@@ -427,7 +435,7 @@ export function CheckoutView() {
                 <fieldset>
                   <legend className="sr-only">Payment method</legend>
                   <div className="space-y-2">
-                    {PAYMENT_OPTIONS.filter((p) => p.value !== "pay_on_delivery" || zoneFor(country, region) === "accra").map((p) => (
+                    {PAYMENT_OPTIONS.filter((p) => p.value !== "pay_on_delivery" || canPayOnDelivery).map((p) => (
                       <label key={p.value} className="flex cursor-pointer items-start gap-3.5 rounded-xl border border-line bg-white p-4 transition-colors has-[:checked]:border-ink has-[:checked]:ring-1 has-[:checked]:ring-ink">
                         <input type="radio" value={p.value} className="mt-1 size-[18px] accent-indigo" {...register("payment_method")} />
                         <p.icon className="mt-0.5 size-5 shrink-0 text-indigo" strokeWidth={1.75} />

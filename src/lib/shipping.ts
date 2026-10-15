@@ -21,24 +21,33 @@ export const GHANA_REGIONS = [
   "Upper West",
 ];
 
+/** Countries we deliver to. Values are ISO codes, which is what the API stores. */
 export const COUNTRIES = [
-  "Ghana",
-  "United Kingdom",
-  "United States",
-  "Canada",
-  "Germany",
-  "Netherlands",
-  "Nigeria",
-  "Côte d'Ivoire",
-  "South Africa",
-  "Other",
+  { code: "GH", name: "Ghana" },
+  { code: "GB", name: "United Kingdom" },
+  { code: "US", name: "United States" },
+  { code: "CA", name: "Canada" },
+  { code: "DE", name: "Germany" },
+  { code: "NL", name: "Netherlands" },
+  { code: "IE", name: "Ireland" },
+  { code: "FR", name: "France" },
+  { code: "IT", name: "Italy" },
+  { code: "NG", name: "Nigeria" },
+  { code: "CI", name: "Côte d'Ivoire" },
+  { code: "ZA", name: "South Africa" },
+  { code: "AE", name: "United Arab Emirates" },
+  { code: "AU", name: "Australia" },
 ];
+
+export function countryName(code: string) {
+  return COUNTRIES.find((c) => c.code === code)?.name ?? code;
+}
 
 /* Sample zones until the shipping app is live; managers edit the real ones in the admin (SRS 8.2.1). */
 const MOCK_OPTIONS: Record<"accra" | "ghana" | "international", DeliveryOption[]> = {
   accra: [
-    { id: "accra-rider", zone: "Accra & Tema", name: "Dispatch rider", description: "Delivered to your door by our rider", fee: 4000, eta_days_min: 1, eta_days_max: 2 },
-    { id: "accra-pickup", zone: "Accra & Tema", name: "Studio pickup, Osu", description: "Collect from our studio, Mon–Sat", fee: 0, eta_days_min: 1, eta_days_max: 1 },
+    { id: "accra-rider", zone: "Accra & Tema", name: "Dispatch rider", description: "Delivered to your door by our rider", fee: 4000, eta_days_min: 1, eta_days_max: 2, allows_pay_on_delivery: true },
+    { id: "accra-pickup", zone: "Accra & Tema", name: "Studio pickup, Osu", description: "Collect from our studio, Mon–Sat", fee: 0, eta_days_min: 1, eta_days_max: 1, allows_pay_on_delivery: true },
   ],
   ghana: [
     { id: "ghana-courier", zone: "Rest of Ghana", name: "Nationwide courier", description: "Tracked delivery to your town", fee: 8000, eta_days_min: 2, eta_days_max: 4 },
@@ -49,7 +58,7 @@ const MOCK_OPTIONS: Record<"accra" | "ghana" | "international", DeliveryOption[]
 };
 
 export function zoneFor(country: string, region: string) {
-  if (country !== "Ghana") return "international" as const;
+  if (country !== "GH") return "international" as const;
   return region === "Greater Accra" ? ("accra" as const) : ("ghana" as const);
 }
 

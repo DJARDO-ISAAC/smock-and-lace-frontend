@@ -41,6 +41,7 @@ export function OrderTimeline({ order }: { order: Order }) {
       {FLOW.map((s, i) => {
         const done = reached >= i;
         const when = at(s.status);
+        const label = s.status === "paid" && order.payment_method === "pay_on_delivery" ? "Paid on delivery" : s.label;
         return (
           <li key={s.status} className="relative flex gap-3 pb-6 last:pb-0 sm:flex-col sm:items-center sm:gap-2 sm:pb-0 sm:text-center">
             {i < FLOW.length - 1 && (
@@ -50,7 +51,7 @@ export function OrderTimeline({ order }: { order: Order }) {
               {done ? <Check className="size-4" /> : <span className="size-2 rounded-full bg-current" />}
             </span>
             <div>
-              <p className={cn("text-sm font-medium", !done && "text-muted")}>{s.label}</p>
+              <p className={cn("text-sm font-medium", !done && "text-muted")}>{label}</p>
               {when && <p className="text-xs text-muted">{formatDate(when, { day: "numeric", month: "short" })}</p>}
               {s.status === "shipped" && order.tracking_number && (
                 <p className="text-xs text-muted">
