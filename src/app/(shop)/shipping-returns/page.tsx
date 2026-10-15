@@ -39,7 +39,7 @@ export default function ShippingPage() {
         <h2>Delivery</h2>
         <ul>
           <li>
-            <strong>Accra &amp; Tema:</strong> our dispatch riders deliver in 1–2 working days. You can also collect free from our studio in Osu, Monday to Saturday.
+            <strong>Accra &amp; Tema:</strong> our dispatch riders deliver in 1–2 working days. You can also collect free from our shop at Oyarifa Crossing.
           </li>
           <li>
             <strong>Rest of Ghana:</strong> tracked courier delivery in 2–4 working days.
@@ -64,6 +64,11 @@ export default function ShippingPage() {
           <li>We&apos;ll confirm and arrange pickup in Accra, or send you return instructions.</li>
           <li>Refunds go back to your original payment method (MoMo or card) within 5 working days of us receiving the item.</li>
         </ol>
+        <h3>Cloth</h3>
+        <p>
+          Cloth can be returned within {siteConfig.returnWindowDays} days if it is uncut and unwashed. Once cloth has been cut or sewn, it
+          can&apos;t be returned, so check the colour with us on WhatsApp first if you&apos;re unsure.
+        </p>
         <h3>Made-to-order and made-to-measure</h3>
         <p>
           These pieces are made for you alone, so they can&apos;t be returned for a refund. If the fit isn&apos;t right, tell us within 14 days and we&apos;ll adjust it free

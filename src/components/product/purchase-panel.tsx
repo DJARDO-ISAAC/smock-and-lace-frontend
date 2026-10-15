@@ -33,7 +33,22 @@ const MEASUREMENT_FIELDS = [
 const stockOf = (v: Variant | undefined) => (v ? v.available_quantity : undefined);
 const isAvailable = (v: Variant | undefined) => Boolean(v && v.is_active && (v.available_quantity === null || v.available_quantity > 0));
 
+/** "6 yards" from a piece length; "6.5 yards" keeps the half. */
+export function yardsText(length: number | null | undefined) {
+  if (!length) return "";
+  const n = Number(length);
+  return `${Number.isInteger(n) ? n : n.toFixed(1)} yard${n === 1 ? "" : "s"}`;
+}
+
+/** "6-yard" for "a 6-yard piece". */
+function pieceText(length: number | null | undefined) {
+  if (!length) return "";
+  const n = Number(length);
+  return `${Number.isInteger(n) ? n : n.toFixed(1)}-yard`;
+}
+
 function StockStatus({ variant, product }: { variant: Variant | undefined; product: ProductDetail }) {
+  const isCloth = product.kind === "cloth";
   if (product.is_made_to_order) {
     return (
       <p className="flex items-center gap-2 text-sm text-indigo">
@@ -46,20 +61,22 @@ function StockStatus({ variant, product }: { variant: Variant | undefined; produ
   if (!isAvailable(variant)) {
     return (
       <p className="flex items-center gap-2 text-sm text-danger">
-        <span className="size-2 rounded-full bg-danger" /> Sold out in this size and colour
+        <span className="size-2 rounded-full bg-danger" /> {isCloth ? "Sold out. Ask us about weaving more." : "Sold out in this size and colour"}
       </p>
     );
   }
   if (qty !== null && qty !== undefined && qty <= 2) {
     return (
       <p className="flex items-center gap-2 text-sm font-medium text-clay-deep">
-        <span className="size-2 animate-pulse rounded-full bg-clay" /> Only {qty} left. Handwoven pieces rarely restock quickly.
+        <span className="size-2 animate-pulse rounded-full bg-clay" />
+        {isCloth ? `Only ${qty} piece${qty === 1 ? "" : "s"} left in this design.` : `Only ${qty} left. Handwoven pieces rarely restock quickly.`}
       </p>
     );
   }
   return (
     <p className="flex items-center gap-2 text-sm text-leaf">
-      <span className="size-2 rounded-full bg-leaf" /> In stock, ready to ship from Accra
+      <span className="size-2 rounded-full bg-leaf" />
+      {isCloth ? `In stock: ${qty} pieces, ready for pickup or delivery` : "In stock, ready to ship from Accra"}
     </p>
   );
 }
@@ -174,6 +191,8 @@ export function PurchasePanel({ product, colour, onColourChange }: { product: Pr
   const available = variant ? isAvailable(variant) : variantsForColour.some(isAvailable);
   const maxQty = Math.min(MAX_QUANTITY_PER_LINE, stockOf(variant) ?? MAX_QUANTITY_PER_LINE);
   const measured = product.is_made_to_order;
+  const isCloth = product.kind === "cloth";
+  const pieceLength = (variant ?? (singleSize ? variantsForColour[0] : undefined))?.length_yards ?? product.length_yards;
 
   // Keep the chosen quantity within what this size has in stock.
   const qty = Math.min(quantity, Math.max(1, maxQty));
@@ -217,10 +236,21 @@ export function PurchasePanel({ product, colour, onColourChange }: { product: Pr
             </a>
           )}
         </div>
-        <p className="mt-1 text-xs text-muted">Price in Ghana cedis. Delivery calculated at checkout.</p>
+        <p className="mt-1 text-xs text-muted">
+          {isCloth && pieceLength ? `Price per ${pieceText(pieceLength)} piece. ` : ""}Price in Ghana cedis. Delivery calculated at checkout.
+        </p>
       </div>
 
-      {product.colours.length > 0 && (
+      {isCloth && product.colours.length === 1 && (
+        <p className="flex items-center gap-3 text-sm">
+          <span className="size-6 rounded-full ring-1 ring-ink/15" style={{ background: product.colours[0].hex }} aria-hidden />
+          <span>
+            <span className="font-semibold">Colourway:</span> <span className="text-ink-soft">{product.colours[0].name}</span>
+          </span>
+        </p>
+      )}
+
+      {(product.colours.length > 1 || (!isCloth && product.colours.length > 0)) && (
         <fieldset>
           <legend className="mb-3 text-sm">
             <span className="font-semibold">Colour:</span> <span className="text-ink-soft">{colour}</span>
@@ -252,9 +282,9 @@ export function PurchasePanel({ product, colour, onColourChange }: { product: Pr
         <fieldset id="size-picker">
           <div className="mb-3 flex items-center justify-between">
             <legend className="text-sm">
-              <span className="font-semibold">Size{size ? ":" : ""}</span> <span className="text-ink-soft">{size}</span>
+              <span className="font-semibold">{isCloth ? "Piece length" : "Size"}{size ? ":" : ""}</span> <span className="text-ink-soft">{size}</span>
             </legend>
-            <SizeGuideButton category={product.category.slug} />
+            {!isCloth && <SizeGuideButton category={product.category.slug} />}
           </div>
           <div className="flex flex-wrap gap-2" role="radiogroup" aria-describedby={sizeError ? "size-error" : undefined}>
             {product.sizes.map((s) => {
@@ -285,7 +315,7 @@ export function PurchasePanel({ product, colour, onColourChange }: { product: Pr
           </div>
           {sizeError && (
             <p id="size-error" role="alert" className="mt-2 text-sm text-danger">
-              Please choose a size.
+              {isCloth ? "Please choose a piece length." : "Please choose a size."}
             </p>
           )}
         </fieldset>
@@ -326,14 +356,43 @@ export function PurchasePanel({ product, colour, onColourChange }: { product: Pr
         </div>
       )}
 
+      {isCloth && (
+        <div className="rounded-xl border border-line bg-white/70 p-5 text-sm">
+          <p className="font-medium text-ink">Sold by the piece{pieceLength ? `: 1 piece = ${yardsText(pieceLength)}` : ""}</p>
+          <p className="mt-1 text-ink-soft">
+            Not sure how much you need? Tell us the style you have in mind on{" "}
+            <a
+              href={whatsappLink(`Hello Fugu Tribe, how many pieces of ${product.name} do I need for my outfit?`)}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="font-medium text-ink underline underline-offset-4"
+            >
+              WhatsApp
+            </a>{" "}
+            and we&apos;ll advise.
+          </p>
+          <p className="mt-3 text-ink-soft">
+            Dressing a bridal party, family or team?{" "}
+            <Link href="/custom-orders" className="font-medium text-ink underline underline-offset-4">
+              Request a group or custom order
+            </Link>
+          </p>
+        </div>
+      )}
+
       <div ref={buyRef} className="flex flex-col gap-3">
         <div className="flex gap-3">
-          {available && <QuantityStepper value={qty} onChange={setQuantity} max={Math.max(1, maxQty)} />}
+          {available && <QuantityStepper value={qty} onChange={setQuantity} max={Math.max(1, maxQty)} label={isCloth ? "Number of pieces" : "Quantity"} />}
           <Button size="lg" className="h-12 flex-1" onClick={addToCart} loading={adding} disabled={!available}>
             {buttonLabel}
             {variant && available && <span className="font-normal opacity-70">· {formatGHS(price * qty, { compact: true })}</span>}
           </Button>
         </div>
+        {isCloth && available && pieceLength ? (
+          <p className="text-sm text-muted" aria-live="polite">
+            {qty} piece{qty === 1 ? "" : "s"} · {yardsText(Number(pieceLength) * qty)} in total
+          </p>
+        ) : null}
         <WishlistButton slug={product.slug} name={product.name} withLabel className="w-full" />
       </div>
 
@@ -348,7 +407,7 @@ export function PurchasePanel({ product, colour, onColourChange }: { product: Pr
         <li className="flex items-center gap-2">
           <RotateCcw className="size-4 shrink-0 text-leaf" />
           <Link href="/shipping-returns" className="hover:underline">
-            {product.is_made_to_order ? "Fit adjustments" : `${siteConfig.returnWindowDays}-day returns`}
+            {product.is_made_to_order ? "Fit adjustments" : isCloth ? "Returns on uncut cloth" : `${siteConfig.returnWindowDays}-day returns`}
           </Link>
         </li>
         <li>
@@ -365,7 +424,7 @@ export function PurchasePanel({ product, colour, onColourChange }: { product: Pr
             <p className="truncate text-sm font-medium">{product.name}</p>
             <p className="text-sm text-muted tabular-nums">
               {formatGHS(price, { compact: true })}
-              {size && ` · ${size}`}
+              {isCloth && pieceLength ? ` per ${pieceText(pieceLength)} piece` : size && ` · ${size}`}
             </p>
           </div>
           <a href={whatsappLink(`Hello, I'm interested in ${product.name}: ${siteConfig.url}/products/${product.slug}`)} target="_blank" rel="noopener noreferrer" tabIndex={showBar ? 0 : -1} className="grid size-12 shrink-0 place-items-center rounded-full border border-line bg-white text-[#1f7a4d]" aria-label="Ask on WhatsApp">

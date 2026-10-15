@@ -61,6 +61,9 @@ export type Measurement = {
 
 export type GarmentKind = "smock" | "dress" | "cap" | "top" | "set" | "bag" | "kids";
 
+/** cloth: sold by the piece (a set length in yards) for customers to sew; garment: ready-made in sizes. */
+export type ProductKind = "cloth" | "garment";
+
 /** Generated artwork used until real product photography is uploaded. */
 export type ArtSpec = {
   kind: GarmentKind;
@@ -99,8 +102,11 @@ export type Collection = {
 export type Variant = {
   id: number;
   sku: string;
+  /** For cloth this is the piece label, e.g. "6 yards". */
   size: string;
   colour: string;
+  /** Cloth only: length of one piece in yards. */
+  length_yards: number | null;
   price: number;
   compare_at_price: number | null;
   /** null = made to order, no stock limit */
@@ -112,9 +118,12 @@ export type ProductSummary = {
   id: number;
   slug: string;
   name: string;
+  kind: ProductKind;
   category: CategoryRef;
   price: number;
   compare_at_price: number | null;
+  /** Cloth: yards in the cheapest piece (the price above is per piece). */
+  length_yards: number | null;
   is_made_to_order: boolean;
   lead_time_days: number | null;
   in_stock: boolean;
@@ -158,6 +167,7 @@ export type ProductOrdering = "newest" | "price" | "-price" | "popularity";
 export type ProductQuery = {
   category?: string;
   collection?: string;
+  kind?: ProductKind;
   q?: string;
   size?: string[];
   colour?: string[];
@@ -189,6 +199,8 @@ export type CartLine = {
   sku: string;
   size: string;
   colour: string;
+  length_yards: number | null;
+  product_kind: ProductKind;
   product_name: string;
   product_slug: string;
   image: string | null;
@@ -277,6 +289,7 @@ export type OrderItem = {
   product_slug: string;
   size: string;
   colour: string;
+  length_yards: number | null;
   unit_price: number;
   quantity: number;
   line_total: number;
@@ -313,4 +326,22 @@ export type CheckoutResult = {
   order: Order;
   /** Gateway hosted page; null when no online payment is needed (pay on delivery, mock mode). */
   payment_url: string | null;
+};
+
+/* ---------- Custom requests (orders app) ---------- */
+
+export type CustomRequestInput = {
+  request_type: "individual" | "group" | "corporate";
+  need: "cloth" | "sewn" | "both";
+  occasion: "" | "wedding" | "funeral" | "festival" | "corporate" | "birthday" | "other";
+  colours: string;
+  quantity: number;
+  needed_by: string | null;
+  budget: string;
+  details: string;
+  full_name: string;
+  email: string;
+  phone: string;
+  organisation: string;
+  country: string;
 };

@@ -8,7 +8,7 @@ export function SearchForm({ defaultValue }: { defaultValue: string }) {
       <label htmlFor="search-page-q" className="sr-only">
         Search products
       </label>
-      <input id="search-page-q" name="q" type="search" defaultValue={defaultValue} placeholder="Smock, lace, indigo…" className="h-10 min-w-0 flex-1 bg-transparent outline-none" />
+      <input id="search-page-q" name="q" type="search" defaultValue={defaultValue} placeholder="Green, orange, smock, indigo…" className="h-10 min-w-0 flex-1 bg-transparent outline-none" />
       <button type="submit" className="h-10 rounded-full bg-indigo px-5 text-sm font-medium text-cotton hover:bg-indigo-deep">
         Search
       </button>

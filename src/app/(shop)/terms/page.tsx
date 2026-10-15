@@ -8,7 +8,7 @@ export const metadata: Metadata = { title: "Terms of sale", alternates: { canoni
 // DRAFT: have these terms reviewed by a Ghanaian lawyer before launch.
 export default function TermsPage() {
   return (
-    <ContentPage crumb="Terms of sale" title="Terms of sale" intro="The terms that apply when you buy from Smock & Lace.">
+    <ContentPage crumb="Terms of sale" title="Terms of sale" intro="The terms that apply when you buy from Fugu Tribe.">
       <div className="prose-shop">
         <h2>Prices and payment</h2>
         <p>
@@ -25,7 +25,12 @@ export default function TermsPage() {
           Stock is limited. Items in your cart are held for {siteConfig.reservationMinutes} minutes once you start payment. If an item sells out before payment is
           confirmed, we&apos;ll refund you in full.
         </p>
-        <h2>Made-to-order pieces</h2>
+        <h2>Cloth sold by the piece</h2>
+        <p>
+          Each piece of cloth is sold at the length shown on its page. Uncut, unwashed cloth can be returned within{" "}
+          {siteConfig.returnWindowDays} days. Once cloth has been cut or sewn it can&apos;t be returned.
+        </p>
+        <h2>Custom and made-to-order pieces</h2>
         <p>
           Made-to-order and made-to-measure pieces are produced after you order. Lead times shown are estimates. Because they are made for you, they can&apos;t be
           returned for a refund, but we adjust the fit free of charge within 14 days of delivery.

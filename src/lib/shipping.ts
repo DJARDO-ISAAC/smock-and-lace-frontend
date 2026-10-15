@@ -47,7 +47,7 @@ export function countryName(code: string) {
 const MOCK_OPTIONS: Record<"accra" | "ghana" | "international", DeliveryOption[]> = {
   accra: [
     { id: "accra-rider", zone: "Accra & Tema", name: "Dispatch rider", description: "Delivered to your door by our rider", fee: 4000, eta_days_min: 1, eta_days_max: 2, allows_pay_on_delivery: true },
-    { id: "accra-pickup", zone: "Accra & Tema", name: "Studio pickup, Osu", description: "Collect from our studio, Mon–Sat", fee: 0, eta_days_min: 1, eta_days_max: 1, allows_pay_on_delivery: true },
+    { id: "accra-pickup", zone: "Accra & Tema", name: "Pickup at Oyarifa Crossing", description: "Collect from our shop at Oyarifa Crossing, Accra", fee: 0, eta_days_min: 1, eta_days_max: 1, allows_pay_on_delivery: true },
   ],
   ghana: [
     { id: "ghana-courier", zone: "Rest of Ghana", name: "Nationwide courier", description: "Tracked delivery to your town", fee: 8000, eta_days_min: 2, eta_days_max: 4 },

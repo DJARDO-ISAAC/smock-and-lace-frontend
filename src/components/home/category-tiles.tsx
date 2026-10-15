@@ -10,9 +10,9 @@ export function CategoryTiles({ categories }: { categories: Category[] }) {
     <section className="py-16 sm:py-24">
       <Container>
         <SectionHeading eyebrow="Shop by category" title="Find your piece" />
-        <ul className="mt-10 grid grid-cols-2 gap-3 sm:gap-4 md:grid-cols-3 lg:grid-cols-6">
-          {categories.map((c, i) => (
-            <li key={c.slug} className={i < 2 ? "md:col-span-1 lg:col-span-2" : "lg:col-span-2 xl:col-span-2"}>
+        <ul className="mt-10 grid grid-cols-2 gap-3 sm:gap-4 lg:grid-cols-4">
+          {categories.map((c) => (
+            <li key={c.slug}>
               <Link href={`/shop/${c.slug}`} className="group relative block aspect-[4/5] overflow-hidden rounded-xl bg-cotton-deep sm:aspect-[5/6]">
                 <div className="absolute inset-0 transition-transform duration-700 ease-out group-hover:scale-105">
                   <ProductMedia url={c.image?.url} art={c.image?.art} alt="" sizes="(min-width: 1024px) 30vw, 50vw" />

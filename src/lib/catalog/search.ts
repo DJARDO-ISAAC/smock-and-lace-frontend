@@ -57,9 +57,11 @@ export function toSummary(p: ProductDetail): ProductSummary {
     id: p.id,
     slug: p.slug,
     name: p.name,
+    kind: p.kind,
     category: p.category,
     price: p.price,
     compare_at_price: p.compare_at_price,
+    length_yards: p.length_yards,
     is_made_to_order: p.is_made_to_order,
     lead_time_days: p.lead_time_days,
     in_stock: p.in_stock,
@@ -82,6 +84,7 @@ export function queryProducts(
 ): Paginated<ProductSummary> {
   let list = all.filter((p) => {
     if (query.category && p.category.slug !== query.category) return false;
+    if (query.kind && p.kind !== query.kind) return false;
     if (query.collection && !p.collections.some((c) => c.slug === query.collection)) return false;
     if (query.q && !matchesSearch(p, query.q)) return false;
     if (query.size?.length && !p.sizes.some((s) => query.size!.includes(s))) return false;

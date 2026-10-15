@@ -2,7 +2,7 @@ import Link from "next/link";
 import { cacheLife } from "next/cache";
 import { MapPin, Mail, Phone } from "lucide-react";
 import { footerNav, siteConfig, whatsappLink } from "@/lib/config";
-import { InstagramIcon, PaymentMarks, WhatsAppIcon } from "@/components/ui/icons";
+import { PaymentMarks, TikTokIcon, WhatsAppIcon } from "@/components/ui/icons";
 import { Logo } from "./logo";
 import { NewsletterForm } from "./newsletter-form";
 
@@ -38,7 +38,7 @@ export function Footer() {
           <div className="max-w-md">
             <Logo tone="light" />
             <p className="mt-5 text-[0.9375rem] leading-relaxed text-cotton/75">
-              Fugu and batakari woven strip by strip in northern Ghana, and lace-fusion pieces finished in our Accra studio.
+              Northern Ghana heritage in luxury pieces. Handwoven fugu cloth, vintage and modern designs, and smocks made for individuals, groups and companies.
             </p>
             <div className="mt-8">
               <p className="font-display text-xl">First look at new drops</p>
@@ -52,8 +52,10 @@ export function Footer() {
             <div>
               <h2 className="eyebrow text-cotton/60">Visit &amp; talk</h2>
               <ul className="mt-4 space-y-3 text-[0.9375rem] text-cotton/85">
-                <li className="flex gap-2.5">
-                  <MapPin className="mt-1 size-4 shrink-0 text-cotton/50" /> {siteConfig.location}
+                <li>
+                  <a href={siteConfig.mapUrl} target="_blank" rel="noopener noreferrer" className="flex gap-2.5 hover:text-white">
+                    <MapPin className="mt-1 size-4 shrink-0 text-cotton/50" /> {siteConfig.location}
+                  </a>
                 </li>
                 <li>
                   <a href={whatsappLink()} target="_blank" rel="noopener noreferrer" className="flex gap-2.5 hover:text-white">
@@ -71,8 +73,8 @@ export function Footer() {
                   </a>
                 </li>
                 <li>
-                  <a href={siteConfig.instagram} target="_blank" rel="noopener noreferrer" className="flex gap-2.5 hover:text-white">
-                    <InstagramIcon className="mt-1 size-4 shrink-0 text-cotton/50" /> {siteConfig.instagramHandle}
+                  <a href={siteConfig.tiktok} target="_blank" rel="noopener noreferrer" className="flex gap-2.5 hover:text-white">
+                    <TikTokIcon className="mt-1 size-4 shrink-0 text-cotton/50" /> {siteConfig.tiktokHandle}
                   </a>
                 </li>
               </ul>

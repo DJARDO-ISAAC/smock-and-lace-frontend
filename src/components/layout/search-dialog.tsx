@@ -9,7 +9,7 @@ import { searchProducts } from "@/lib/catalog/client";
 import { formatGHS } from "@/lib/money";
 import { ProductMedia } from "@/components/product/product-media";
 
-const POPULAR = ["Batakari", "Indigo smock", "Lace top", "Fugu cap", "Wedding", "Kids"];
+const POPULAR = ["Green", "Blue", "Pink", "Vintage", "Batakari", "Kaftan"];
 
 export function SearchDialog({ open, onClose }: { open: boolean; onClose: () => void }) {
   const ref = useRef<HTMLDialogElement>(null);
@@ -89,7 +89,7 @@ export function SearchDialog({ open, onClose }: { open: boolean; onClose: () => 
               type="search"
               value={q}
               onChange={(e) => setQ(e.target.value)}
-              placeholder="Search smocks, lace, caps…"
+              placeholder="Search cloth, colours, smocks…"
               autoComplete="off"
               enterKeyHint="search"
               className="min-w-0 flex-1 bg-transparent font-display text-2xl outline-none placeholder:text-muted/60 sm:text-3xl [&::-webkit-search-cancel-button]:hidden"
@@ -115,7 +115,7 @@ export function SearchDialog({ open, onClose }: { open: boolean; onClose: () => 
           ) : shown.length === 0 ? (
             <div className="mt-8 text-center">
               <p className="font-display text-xl">Nothing matches “{q.trim()}”</p>
-              <p className="mt-2 text-sm text-muted">Try a fabric, colour or style, like “indigo” or “lace”.</p>
+              <p className="mt-2 text-sm text-muted">Try a colour or style, like “green”, “orange” or “smock”.</p>
             </div>
           ) : (
             <div className="mt-4" aria-live="polite">

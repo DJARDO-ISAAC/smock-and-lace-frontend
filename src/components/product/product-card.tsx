@@ -39,14 +39,19 @@ export function ProductCard({ product, priority, className }: { product: Product
       </div>
 
       <div className="mt-3.5 flex flex-1 flex-col gap-1">
-        <p className="text-xs tracking-wide text-muted">{product.origin}</p>
+        <p className="text-xs tracking-wide text-muted">{product.kind === "cloth" ? `Fugu cloth · ${product.colours[0]?.name ?? ""}` : product.category.name}</p>
         <h3 className="font-sans text-[0.9375rem] leading-snug font-medium text-ink">
           <Link href={`/products/${product.slug}`} className="after:absolute after:inset-0 after:content-['']">
             {product.name}
           </Link>
         </h3>
         <div className="mt-0.5 flex flex-wrap items-center justify-between gap-2">
-          <Price amount={product.price} compareAt={product.compare_at_price} size="sm" />
+          <span className="inline-flex items-baseline gap-1">
+            <Price amount={product.price} compareAt={product.compare_at_price} size="sm" />
+            {product.kind === "cloth" && product.length_yards ? (
+              <span className="text-xs text-muted">/ {Number(product.length_yards)} yds</span>
+            ) : null}
+          </span>
           {product.colours.length > 1 && (
             <span className="flex items-center gap-1" aria-label={`${product.colours.length} colours`}>
               {product.colours.slice(0, 4).map((c) => (

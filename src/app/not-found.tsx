@@ -22,9 +22,9 @@ export default function NotFound() {
           </LinkButton>
         </div>
         <p className="mt-10 text-sm text-muted">
-          Popular: <Link href="/collections/fugu-wednesday" className="underline underline-offset-4">Fugu Wednesday</Link> ·{" "}
-          <Link href="/shop/mens-smocks" className="underline underline-offset-4">Men&apos;s smocks</Link> ·{" "}
-          <Link href="/shop/lace-fusion" className="underline underline-offset-4">Lace fusion</Link>
+          Popular: <Link href="/shop/fugu-cloth" className="underline underline-offset-4">Fugu cloth</Link> ·{" "}
+          <Link href="/shop/smocks-batakari" className="underline underline-offset-4">Smocks &amp; batakari</Link> ·{" "}
+          <Link href="/custom-orders" className="underline underline-offset-4">Custom orders</Link>
         </p>
       </div>
     </main>

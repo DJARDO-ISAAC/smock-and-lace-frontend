@@ -8,7 +8,7 @@ import { ADULT_SIZES, SizeTable, WOMEN_SIZES } from "./size-table";
 
 export function SizeGuideButton({ category }: { category: string }) {
   const [open, setOpen] = useState(false);
-  const women = category === "womens-smocks-dresses" || category === "lace-fusion";
+  const women = category === "womens-fugu";
   return (
     <>
       <button type="button" onClick={() => setOpen(true)} className="inline-flex items-center gap-1.5 text-sm text-ink-soft underline decoration-ink/25 underline-offset-4 hover:decoration-ink">

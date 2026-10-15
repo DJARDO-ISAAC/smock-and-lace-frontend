@@ -63,6 +63,11 @@ export function CartLine({ line, compact, onNavigate }: { line: Line; compact?: 
           <p className="shrink-0 text-[0.9375rem] font-medium tabular-nums">{formatGHS(line.line_total, { compact: true })}</p>
         </div>
 
+        {line.product_kind === "cloth" && line.length_yards ? (
+          <p className="mt-1 text-xs text-muted">
+            {line.quantity} piece{line.quantity === 1 ? "" : "s"} · {Number(line.length_yards) * line.quantity} yards of cloth
+          </p>
+        ) : null}
         {line.is_made_to_order && line.lead_time_days && (
           <p className="mt-1.5 inline-flex items-center gap-1.5 text-xs text-indigo">
             <Clock className="size-3.5" /> Made to order · ships in about {line.lead_time_days} days

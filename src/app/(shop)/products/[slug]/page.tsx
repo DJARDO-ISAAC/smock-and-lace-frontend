@@ -82,7 +82,7 @@ async function ProductContent({ params }: { params: PageProps<"/products/[slug]"
 
   const details = (
     <div className="border-t border-line">
-      <AccordionItem title="Description" defaultOpen>
+      <AccordionItem title={product.kind === "cloth" ? "About this cloth" : "Description"} defaultOpen>
         <p>{product.description}</p>
       </AccordionItem>
       <AccordionItem title="Fabric & care">
@@ -93,13 +93,15 @@ async function ProductContent({ params }: { params: PageProps<"/products/[slug]"
       </AccordionItem>
       <AccordionItem title="Delivery & returns">
         <ul className="list-disc space-y-1.5 pl-5">
-          <li>Accra &amp; Tema: 1–2 working days by dispatch rider, or free pickup from our Osu studio.</li>
+          <li>Accra &amp; Tema: 1–2 working days by dispatch rider, or free pickup from our shop at Oyarifa Crossing.</li>
           <li>Rest of Ghana: 2–4 working days, tracked.</li>
           <li>International: 4–8 working days by DHL Express. Import duties are paid on arrival.</li>
           <li>
-            {product.is_made_to_order
-              ? "Made-to-order pieces are cut for you, so they can't be returned, but we'll adjust the fit free within 14 days."
-              : `Return unworn pieces within ${siteConfig.returnWindowDays} days for an exchange or refund.`}
+            {product.kind === "cloth"
+              ? `Return uncut, unwashed cloth within ${siteConfig.returnWindowDays} days for an exchange or refund. Cut cloth can't be returned.`
+              : product.is_made_to_order
+                ? "Made-to-measure pieces are sewn for you, so they can't be returned, but we'll adjust the fit free within 14 days."
+                : `Return unworn pieces within ${siteConfig.returnWindowDays} days for an exchange or refund.`}
           </li>
         </ul>
       </AccordionItem>

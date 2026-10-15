@@ -1,6 +1,6 @@
-# Smock & Lace storefront
+# Fugu Tribe storefront
 
-Next.js storefront for the Fugu Tribe (Smock & Lace) shop. It talks only to the Django API in `../smock-and-lace-backend` (SRS sections 3 and 9).
+Next.js storefront for Fugu Tribe, a fugu shop at Oyarifa Crossing, Accra: handwoven fugu cloth sold by the piece, ready-made smocks and batakari, and custom orders for individuals, groups and companies. It talks only to the Django API in `../smock-and-lace-backend` (SRS sections 3 and 9).
 
 **Stack:** Next.js 16 (App Router, Cache Components), React 19, TypeScript, Tailwind CSS 4, Zustand, React Hook Form and Zod.
 
@@ -49,6 +49,7 @@ Response types are in `src/lib/api/types.ts`. Money is always in integer pesewas
 | `GET /orders/`, `/orders/{number}/` (guests add `?key=`) | ✅ exists | confirmation, order history |
 | `GET /orders/{number}/invoice/`, `POST /orders/{number}/return-request/` | ⏳ to build | invoice download, returns |
 | `POST /auth/password-reset/` | ⏳ to build | forgot password |
+| `POST /custom-requests/` | ✅ exists | custom and group order form |
 | `POST /newsletter/`, `/stock-alerts/` | ⏳ to build | newsletter, back-in-stock alerts |
 
 The access token is kept in memory only. The refresh token stays in the API's httpOnly cookie (`sl_refresh`), and the session is restored on load via `/auth/refresh/`. Guest carts send their token in the `X-Cart-Token` header, which is kept in the first-party cookie `sl_cart`. Cross-site deployments need `REFRESH_COOKIE_SAMESITE=None` and HTTPS on the API.
@@ -72,11 +73,18 @@ src/
 
 Design tokens (colours, fonts, motion) live in `src/app/globals.css` under `@theme`.
 
+## Cloth and garments
+
+Products have a `kind`:
+
+- **cloth**: sold by the piece. Each variant has a `length_yards` (e.g. 6) and the price is per piece; the cart and orders show the total yards. Staff set length and price per design in the admin.
+- **garment**: ready-made in sizes, optionally made to measure.
+
 ## Placeholder content to replace before launch
 
 - **Product photos:** cards and galleries draw generated strip-cloth artwork (`ProductArt`) whenever an image has no `url`, in both modes (`src/lib/catalog/art.ts`). Photos uploaded in the Django admin replace it automatically.
-- **Sample catalogue, reviews and home-page testimonials:** these are illustrative.
-- **Contact details:** set the phone, email, address and Instagram handle in `src/lib/config.ts`.
+- **Sample catalogue:** the 13 cloth designs use Fugu Tribe's own TikTok photos (`public/demo`) at GH₵ 500 per 6-yard piece (from the shop's post; vintage designs at GH₵ 550 are a guess). The garments are placeholders drawn as artwork. Load the same catalogue into Django with `python manage.py seed_catalogue`.
+- **Contact details:** phone, email, address and TikTok are in `src/lib/config.ts`. Opening hours aren't shown yet.
 - **Policies:** the privacy policy and terms of sale are drafts and need legal review (Act 843).
 - **Delivery fees and zones:** sample values are in `src/lib/shipping.ts` until the shipping app exists.
 - **Mock discount codes:** `AKWAABA10` and `FUGUWED15`, in mock mode only.

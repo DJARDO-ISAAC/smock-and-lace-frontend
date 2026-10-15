@@ -4,16 +4,25 @@ import { ContentPage } from "@/components/content/page-shell";
 import { AccordionItem } from "@/components/ui/accordion";
 import { siteConfig, whatsappLink } from "@/lib/config";
 
-export const metadata: Metadata = { title: "FAQ", description: "Answers about payments, delivery, sizing, made-to-order pieces and caring for handwoven cloth.", alternates: { canonical: "/faq" } };
+export const metadata: Metadata = { title: "FAQ", description: "Answers about buying fugu cloth by the piece, custom orders, payments, delivery and caring for handwoven cloth.", alternates: { canonical: "/faq" } };
 
 const FAQ: { group: string; items: [string, string][] }[] = [
   {
+    group: "Fugu cloth",
+    items: [
+      ["How is the cloth sold?", "By the piece. Each design shows its piece length (for example 6 yards) and the price per piece. Add as many pieces as you need."],
+      ["How much cloth do I need?", "It depends on the style and the size of the person. Tell us the style on WhatsApp, or ask your tailor, and we'll help you choose the number of pieces."],
+      ["Can I get my own colours?", "Yes. We customise colourways for individuals, groups and companies at no extra cost. Use the custom orders page or message us on WhatsApp."],
+      ["Do you sew too?", "Yes. We sell ready-made smocks and batakari, and we can sew from our cloth for you or your whole group."],
+    ],
+  },
+  {
     group: "Orders & payment",
     items: [
-      ["How can I pay?", "Mobile Money (MTN MoMo, Telecel Cash, AT Money) and Visa or Mastercard, through our secure payment partner. In Accra and Tema you can also pay on delivery."],
+      ["How can I pay?", "Mobile Money (MTN MoMo, Telecel Cash, AT Money) and Visa or Mastercard, through our secure payment partner. In Accra you can also pay on delivery or when you pick up at our shop."],
       ["Is it safe to pay on your site?", "Yes. Payments are handled on our payment partner's secure page. We never see or store your card number or MoMo PIN."],
       ["Do I need an account?", "No. You can check out as a guest. An account lets you track orders, save addresses and measurements, and check out faster."],
-      ["Can I change or cancel my order?", "Message us on WhatsApp as soon as possible. Ready-to-ship orders can be changed until they're dispatched. Made-to-order pieces can be changed until weaving starts."],
+      ["Can I change or cancel my order?", "Message us on WhatsApp as soon as possible. Ready-to-ship orders can be changed until they're dispatched. Custom pieces can be changed until weaving or sewing starts."],
     ],
   },
   {

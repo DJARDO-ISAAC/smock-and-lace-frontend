@@ -75,6 +75,7 @@ export async function placeOrder(input: CheckoutInput, access: string | null, ca
       product_slug: l.product_slug,
       size: l.size,
       colour: l.colour,
+      length_yards: l.length_yards,
       unit_price: l.unit_price,
       quantity: l.quantity,
       line_total: l.line_total,

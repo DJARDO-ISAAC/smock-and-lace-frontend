@@ -31,10 +31,11 @@ const organisationLd = {
   url: siteConfig.url,
   description: siteConfig.description,
   email: siteConfig.email,
-  address: { "@type": "PostalAddress", addressLocality: "Accra", addressCountry: "GH" },
+  address: { "@type": "PostalAddress", streetAddress: "Oyarifa Crossing", addressLocality: "Accra", addressCountry: "GH" },
   currenciesAccepted: "GHS",
   paymentAccepted: "Mobile Money, Visa, Mastercard",
-  sameAs: [siteConfig.instagram],
+  sameAs: [siteConfig.tiktok],
+  telephone: "+233597708233",
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {

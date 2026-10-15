@@ -10,7 +10,7 @@ import { cn } from "@/lib/utils";
 import { useAuth } from "@/stores/auth";
 import { useCart } from "@/stores/cart";
 import { useSaved } from "@/stores/saved";
-import { WhatsAppIcon, InstagramIcon } from "@/components/ui/icons";
+import { TikTokIcon, WhatsAppIcon } from "@/components/ui/icons";
 import { Logo } from "./logo";
 import { SearchDialog } from "./search-dialog";
 
@@ -170,13 +170,13 @@ export function Header() {
                 </Link>
               </li>
               <li>
-                <a href={whatsappLink("Hello Smock & Lace, I have a question.")} target="_blank" rel="noopener noreferrer" className="flex items-center gap-3">
+                <a href={whatsappLink("Hello Fugu Tribe, I have a question.")} target="_blank" rel="noopener noreferrer" className="flex items-center gap-3">
                   <WhatsAppIcon className="size-5" /> Chat on WhatsApp
                 </a>
               </li>
               <li>
-                <a href={siteConfig.instagram} target="_blank" rel="noopener noreferrer" className="flex items-center gap-3">
-                  <InstagramIcon className="size-5" /> {siteConfig.instagramHandle}
+                <a href={siteConfig.tiktok} target="_blank" rel="noopener noreferrer" className="flex items-center gap-3">
+                  <TikTokIcon className="size-5" /> {siteConfig.tiktokHandle} on TikTok
                 </a>
               </li>
             </ul>

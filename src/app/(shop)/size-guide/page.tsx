@@ -15,7 +15,7 @@ const HOW = [
 
 export default function SizeGuidePage() {
   return (
-    <ContentPage crumb="Size guide" eyebrow="Fit" title="Size guide" intro="All measurements are body measurements in centimetres. Smocks are cut generously, so if you're between sizes, size down for a neater fit.">
+    <ContentPage crumb="Size guide" eyebrow="Fit" title="Size guide" intro="Sizes for our ready-made smocks and women's fugu. All measurements are body measurements in centimetres. Buying cloth instead? Tell your tailor the style and they'll tell you how many pieces you need.">
       <section aria-labelledby="men">
         <h2 id="men" className="text-3xl">
           Smocks &amp; tunics
@@ -26,7 +26,7 @@ export default function SizeGuidePage() {
       </section>
       <section aria-labelledby="women" className="mt-14">
         <h2 id="women" className="text-3xl">
-          Women&apos;s dresses &amp; lace fusion
+          Women&apos;s fugu
         </h2>
         <div className="mt-5">
           <SizeTable rows={WOMEN_SIZES} cols={[{ key: "size", label: "Size" }, { key: "bust", label: "Bust" }, { key: "waist", label: "Waist" }, { key: "hips", label: "Hips" }]} />

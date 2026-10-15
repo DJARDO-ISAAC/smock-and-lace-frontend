@@ -52,7 +52,7 @@ async function Results({ scope, basePath, searchParams }: { scope: Scope; basePa
         <div className="min-w-0">
           <div className="sticky top-16 z-20 -mx-4 mb-6 flex items-center justify-between gap-3 border-b border-line bg-cotton/95 px-4 py-3 backdrop-blur sm:-mx-6 sm:px-6 lg:static lg:mx-0 lg:border-0 lg:bg-transparent lg:px-0 lg:py-0 lg:backdrop-blur-none">
             <p className="text-sm text-muted" aria-live="polite">
-              {pluralize(page.count, "piece")}
+              {pluralize(page.count, page.results.length && page.results.every((p) => p.kind === "cloth") ? "design" : "item")}
             </p>
             <div className="flex items-center gap-2">
               <MobileFilters facets={facets} count={page.count} activeCount={active} />

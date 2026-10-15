@@ -17,6 +17,8 @@ const nextConfig: NextConfig = {
   },
   images: {
     formats: ["image/avif", "image/webp"],
+    // Lets local development optimise photos from a Django API on this machine. Never on for a public API host.
+    dangerouslyAllowLocalIP: ["localhost", "127.0.0.1"].includes(api.hostname),
     qualities: [70, 85],
     remotePatterns: [
       { protocol: "https", hostname: "res.cloudinary.com" },

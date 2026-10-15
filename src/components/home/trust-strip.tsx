@@ -1,11 +1,10 @@
-import { Hand, RotateCcw, Smartphone, Truck } from "lucide-react";
-import { siteConfig } from "@/lib/config";
+import { Palette, Smartphone, Store, Truck } from "lucide-react";
 
 const items = [
-  { icon: Hand, title: "Woven by hand", text: "Every strip made on a narrow loom" },
+  { icon: Store, title: "Shop in Accra", text: "Oyarifa Crossing, pickup any day" },
+  { icon: Truck, title: "Delivery worldwide", text: "Across Ghana and abroad" },
   { icon: Smartphone, title: "MoMo & card", text: "MTN, Telecel, AT, Visa, Mastercard" },
-  { icon: Truck, title: "Ghana & worldwide", text: "Tracked delivery to your door" },
-  { icon: RotateCcw, title: `${siteConfig.returnWindowDays}-day returns`, text: "On ready-to-ship pieces" },
+  { icon: Palette, title: "Custom colours", text: "At no extra cost" },
 ];
 
 export function TrustStrip() {

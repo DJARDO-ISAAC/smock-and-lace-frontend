@@ -13,7 +13,7 @@ export default function LoginPage() {
       subtitle="Sign in to track orders and check out faster."
       footer={
         <>
-          New to Smock &amp; Lace?{" "}
+          New to Fugu Tribe?{" "}
           <Link href="/register" className="font-medium text-ink underline underline-offset-4">
             Create an account
           </Link>

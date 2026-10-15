@@ -5,21 +5,38 @@ import { LinkButton } from "@/components/ui/button";
 import { ProductMedia } from "@/components/product/product-media";
 import { formatGHS } from "@/lib/money";
 
-export function CollectionFeature({ collection, products }: { collection: Collection; products: ProductSummary[] }) {
+export function CollectionFeature({
+  collection,
+  products,
+  eyebrow,
+  note,
+  secondary,
+}: {
+  collection: Collection;
+  products: ProductSummary[];
+  eyebrow: string;
+  note?: string;
+  secondary?: { label: string; href: string };
+}) {
   return (
     <section className="relative overflow-hidden bg-indigo text-cotton">
       <div className="absolute inset-y-0 right-0 w-1/3 strip-weave opacity-[0.07]" aria-hidden />
       <div className="relative mx-auto grid max-w-7xl gap-12 px-4 py-16 sm:px-6 sm:py-24 lg:grid-cols-[0.9fr_1.6fr] lg:items-center lg:px-10">
         <div className="max-w-md">
-          <p className="eyebrow text-kola">Every Wednesday</p>
+          <p className="eyebrow text-kola">{eyebrow}</p>
           <h2 className="mt-4 text-4xl sm:text-5xl">{collection.name}</h2>
           <p className="mt-5 text-lg leading-relaxed text-cotton/80">{collection.description}</p>
-          <p className="mt-4 text-[0.9375rem] leading-relaxed text-cotton/65">
-            Ghana now wears fugu every Wednesday. These are our lightest, easiest pieces for the office, campus or a midweek outing.
-          </p>
-          <LinkButton href={`/collections/${collection.slug}`} size="lg" className="mt-8 bg-cotton text-indigo hover:bg-white">
-            Shop the edit <ArrowRight className="size-4" />
-          </LinkButton>
+          {note && <p className="mt-4 text-[0.9375rem] leading-relaxed text-cotton/65">{note}</p>}
+          <div className="mt-8 flex flex-wrap gap-3">
+            <LinkButton href={`/collections/${collection.slug}`} size="lg" className="bg-cotton text-indigo hover:bg-white">
+              Shop the collection <ArrowRight className="size-4" />
+            </LinkButton>
+            {secondary && (
+              <LinkButton href={secondary.href} size="lg" variant="outline" className="border-cotton/40 text-cotton hover:border-cotton hover:bg-cotton/10">
+                {secondary.label}
+              </LinkButton>
+            )}
+          </div>
         </div>
         <ul className="-mx-4 flex snap-x snap-mandatory gap-4 overflow-x-auto px-4 pb-2 scrollbar-none sm:mx-0 sm:grid sm:grid-cols-3 sm:overflow-visible sm:px-0">
           {products.slice(0, 3).map((p) => (

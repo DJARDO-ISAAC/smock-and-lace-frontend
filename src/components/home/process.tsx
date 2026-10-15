@@ -12,7 +12,7 @@ const steps = [
   {
     n: "02",
     title: "Woven in strips",
-    text: "On narrow horizontal looms, weavers make long strips about a hand's width wide. A smock can need 40 or more.",
+    text: "On narrow horizontal looms, weavers make long strips about a hand's width wide, then sew them edge to edge into a full piece of cloth.",
     art: { kind: "smock", view: "detail", palette: ["#6b4a2f", "#ead9bb", "#a4472a", "#1b1a17"], seed: 23 } as ArtSpec,
   },
   {
@@ -34,7 +34,7 @@ export function Process() {
               From cotton to cloth, <em>by hand</em>
             </>
           }
-          description="A single smock takes weeks from spinning to the final stitch. Here is where yours begins."
+          description="Every piece of fugu cloth passes through many hands in northern Ghana before it reaches our shelves."
         />
         <ol className="mt-12 grid gap-10 md:grid-cols-3 md:gap-6 lg:gap-10">
           {steps.map((s) => (

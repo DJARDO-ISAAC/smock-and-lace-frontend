@@ -43,7 +43,11 @@ function apiCall(path: string, init: { method?: string; body?: unknown }, access
 function withLineArt(cart: Cart): Cart {
   return {
     ...cart,
-    items: cart.items.map((l) => (l.image ? l : { ...l, art: artFor(guessKind(l.product_name), l.colour, hashString(l.product_slug)) })),
+    items: cart.items.map((l) =>
+      l.image
+        ? l
+        : { ...l, art: artFor(guessKind(l.product_name), l.colour, hashString(l.product_slug), l.product_kind === "cloth" ? "detail" : "front") },
+    ),
   };
 }
 
@@ -139,10 +143,12 @@ function priced(lines: StoredLine[]): Cart {
       sku: variant.sku,
       size: variant.size,
       colour: variant.colour,
+      length_yards: variant.length_yards,
+      product_kind: product.kind,
       product_name: product.name,
       product_slug: product.slug,
       image: image?.url ?? null,
-      art: image?.art ? { ...image.art, view: "front" } : undefined,
+      art: image?.art ? { ...image.art, view: product.kind === "cloth" ? "detail" : "front" } : undefined,
       quantity: line.quantity,
       unit_price: variant.price,
       compare_at_price: variant.compare_at_price,

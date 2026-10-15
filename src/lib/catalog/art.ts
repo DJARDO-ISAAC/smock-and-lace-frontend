@@ -23,10 +23,7 @@ export function artFor(kind: GarmentKind, colour: string, seed: number, view: Ar
 }
 
 const CATEGORY_KIND: Record<string, GarmentKind> = {
-  "womens-smocks-dresses": "dress",
-  "lace-fusion": "top",
-  caps: "cap",
-  accessories: "bag",
+  "womens-fugu": "dress",
   kids: "kids",
 };
 
@@ -56,12 +53,17 @@ export function withPlaceholderArt<T extends ProductSummary>(product: T): T {
   colours.forEach((colour, ci) => {
     if (!variants && ci > 0) return; // cards only need the first colour
     const firstVariant = variants?.find((v) => v.colour === colour.name);
-    const views: ArtSpec["view"][] = ci === 0 && variants ? ["front", "detail", "back", "detail"] : ["front", "detail"];
+    // Cloth is shown as the fabric itself; garments as the garment shape.
+    const views: ArtSpec["view"][] =
+      product.kind === "cloth" ? ["detail", "detail"] : ci === 0 && variants ? ["front", "detail", "back", "detail"] : ["front", "detail"];
     views.forEach((view, vi) => {
       images.push({
         id: -(product.id * 1000 + ci * 10 + vi),
         url: null,
-        alt: `${product.name} in ${colour.name.toLowerCase()}, ${view === "detail" ? "close-up of the handwoven strips" : `${view} view`}`,
+        alt:
+          product.kind === "cloth"
+            ? `${product.name} fugu cloth${vi ? ", close-up" : ""}`
+            : `${product.name} in ${colour.name.toLowerCase()}, ${view === "detail" ? "close-up of the handwoven strips" : `${view} view`}`,
         // First colour's images belong to the product; others to a variant of that colour.
         variant_id: ci === 0 ? null : (firstVariant?.id ?? null),
         art: artFor(kind, colour.name, seed + ci * 7 + vi, view, colour.hex),
@@ -72,11 +74,9 @@ export function withPlaceholderArt<T extends ProductSummary>(product: T): T {
 }
 
 const CATEGORY_COLOUR: Record<string, string> = {
-  "mens-smocks": "Indigo",
-  "womens-smocks-dresses": "Kola",
-  "lace-fusion": "Ivory lace",
-  caps: "Earth",
-  accessories: "Natural",
+  "fugu-cloth": "Kola",
+  "smocks-batakari": "Indigo",
+  "womens-fugu": "Blush",
   kids: "Forest",
 };
 
@@ -85,7 +85,7 @@ export function withCategoryArt(category: Category): Category {
   const colour = CATEGORY_COLOUR[category.slug] ?? Object.keys(PALETTES)[hashString(category.slug) % 10];
   return {
     ...category,
-    image: { id: 0, url: null, alt: category.name, variant_id: null, art: artFor(guessKind(category.name, category.slug), colour, hashString(category.slug)) },
+    image: { id: 0, url: null, alt: category.name, variant_id: null, art: artFor(guessKind(category.name, category.slug), colour, hashString(category.slug), category.slug === "fugu-cloth" ? "detail" : "front") },
   };
 }
 
