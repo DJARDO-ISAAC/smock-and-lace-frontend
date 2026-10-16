@@ -2,11 +2,13 @@ import type { Metadata } from "next";
 import { ContentPage } from "@/components/content/page-shell";
 import { siteConfig } from "@/lib/config";
 import { formatGHS } from "@/lib/money";
-import { DELIVERY_ESTIMATES } from "@/lib/shipping";
+import { getDeliveryEstimates } from "@/lib/delivery-estimates";
+import { formatEta } from "@/lib/shipping";
 
 export const metadata: Metadata = { title: "Shipping & returns", description: "Delivery fees and times across Ghana and worldwide, and our returns policy.", alternates: { canonical: "/shipping-returns" } };
 
-export default function ShippingPage() {
+export default async function ShippingPage() {
+  const estimates = await getDeliveryEstimates();
   return (
     <ContentPage crumb="Shipping & returns" eyebrow="Help" title="Shipping & returns" intro="We deliver across Ghana and worldwide. Fees are shown at checkout before you pay.">
       <div className="overflow-x-auto rounded-2xl ring-1 ring-line">
@@ -25,13 +27,20 @@ export default function ShippingPage() {
             </tr>
           </thead>
           <tbody className="divide-y divide-line bg-white">
-            {DELIVERY_ESTIMATES.map((d) => (
+            {estimates.map((d) => (
               <tr key={d.zone}>
                 <td className="px-5 py-4 font-medium">{d.zone}</td>
-                <td className="px-5 py-4 tabular-nums">{formatGHS(d.fee, { compact: true })}</td>
-                <td className="px-5 py-4 text-ink-soft">{d.eta}</td>
+                <td className="px-5 py-4 tabular-nums">{d.fee_from ? formatGHS(d.fee_from, { compact: true }) : "Free"}</td>
+                <td className="px-5 py-4 text-ink-soft">{formatEta(d)}</td>
               </tr>
             ))}
+            {estimates.length === 0 && (
+              <tr>
+                <td colSpan={3} className="px-5 py-4 text-ink-soft">
+                  Enter your address at checkout to see delivery options and fees.
+                </td>
+              </tr>
+            )}
           </tbody>
         </table>
       </div>

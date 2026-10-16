@@ -1,5 +1,5 @@
 import { apiFetch, toQueryString } from "@/lib/api/client";
-import type { DeliveryOption } from "@/lib/api/types";
+import type { DeliveryEstimate, DeliveryOption } from "@/lib/api/types";
 import { siteConfig } from "@/lib/config";
 
 export const GHANA_REGIONS = [
@@ -69,9 +69,21 @@ export async function getDeliveryOptions(country: string, region: string): Promi
   return MOCK_OPTIONS[zoneFor(country, region)];
 }
 
-/** Cheapest fee per zone, for "from" estimates in the cart and on product pages. */
-export const DELIVERY_ESTIMATES = [
-  { zone: "Accra & Tema", fee: 4000, eta: "1–2 working days" },
-  { zone: "Rest of Ghana", fee: 8000, eta: "2–4 working days" },
-  { zone: "International", fee: 65000, eta: "4–8 working days" },
-];
+/** "From" fees for the sample zones, with the same rule as GET /shipping/estimates/: free methods
+ * such as shop pickup are left out of the starting fee unless every method in the zone is free. */
+export function mockEstimates(): DeliveryEstimate[] {
+  return Object.values(MOCK_OPTIONS).map((methods) => {
+    const priced = methods.some((m) => m.fee > 0) ? methods.filter((m) => m.fee > 0) : methods;
+    return {
+      zone: methods[0].zone,
+      fee_from: Math.min(...priced.map((m) => m.fee)),
+      eta_days_min: Math.min(...priced.map((m) => m.eta_days_min)),
+      eta_days_max: Math.max(...priced.map((m) => m.eta_days_max)),
+    };
+  });
+}
+
+export function formatEta({ eta_days_min: min, eta_days_max: max }: DeliveryEstimate) {
+  if (min === max) return `${min} working day${min === 1 ? "" : "s"}`;
+  return `${min}–${max} working days`;
+}

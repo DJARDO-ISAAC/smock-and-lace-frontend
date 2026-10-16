@@ -6,7 +6,7 @@
 import { timingSafeEqual } from "node:crypto";
 import { revalidateTag } from "next/cache";
 
-const TAGS = new Set(["products", "categories", "collections"]);
+const TAGS = new Set(["products", "categories", "collections", "shipping"]);
 
 function authorized(header: string | null) {
   const secret = process.env.REVALIDATE_SECRET;

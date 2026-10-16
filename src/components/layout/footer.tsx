@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { cacheLife } from "next/cache";
 import { MapPin, Mail, Phone } from "lucide-react";
-import { footerNav, siteConfig, whatsappLink } from "@/lib/config";
+import { footerNav, siteConfig, whatsappLink, type NavItem } from "@/lib/config";
 import { PaymentMarks, TikTokIcon, WhatsAppIcon } from "@/components/ui/icons";
 import { Logo } from "./logo";
 import { NewsletterForm } from "./newsletter-form";
@@ -29,7 +29,8 @@ function FooterColumn({ title, links }: { title: string; links: { label: string;
   );
 }
 
-export function Footer() {
+/** `catalogue` is the main menu's category and collection links, from getMenu(). */
+export function Footer({ catalogue }: { catalogue: NavItem[] }) {
   return (
     <footer className="mt-auto bg-indigo-deep text-cotton">
       <div className="strip-weave h-1.5 opacity-90" aria-hidden />
@@ -46,7 +47,7 @@ export function Footer() {
             </div>
           </div>
           <div className="grid grid-cols-2 gap-10 sm:grid-cols-[1fr_1fr_1fr_1.5fr]">
-            <FooterColumn title="Shop" links={footerNav.shop} />
+            <FooterColumn title="Shop" links={[...catalogue, { label: "Custom orders", href: "/custom-orders" }]} />
             <FooterColumn title="Help" links={footerNav.help} />
             <FooterColumn title="Company" links={footerNav.company} />
             <div>

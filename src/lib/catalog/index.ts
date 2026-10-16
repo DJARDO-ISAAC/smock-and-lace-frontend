@@ -13,7 +13,7 @@ import type {
   ProductQuery,
   ProductSummary,
 } from "@/lib/api/types";
-import { siteConfig } from "@/lib/config";
+import { siteConfig, type NavItem } from "@/lib/config";
 import * as mock from "./mock-data";
 import { withCategoryArt, withCollectionArt, withPlaceholderArt } from "./art";
 import { DEFAULT_PAGE_SIZE, facetsFor, queryProducts, toSummary } from "./search";
@@ -105,6 +105,25 @@ export async function getFacets(scope: { category?: string; collection?: string 
       (!scope.collection || p.collections.some((c) => c.slug === scope.collection)),
   );
   return facetsFor(list);
+}
+
+/**
+ * Catalogue links for the header and footer: categories, then collections, ticked "Show in menu" in the admin.
+ * If nothing is ticked (or the API predates the setting), every top-level category with products is listed.
+ * Never throws: without the API the menu just shows the fixed pages.
+ */
+export async function getMenu(): Promise<NavItem[]> {
+  try {
+    const [categories, collections] = await Promise.all([getCategories(), getCollections()]);
+    const ticked = [
+      ...categories.filter((c) => c.show_in_menu).map((c) => ({ label: c.name, href: `/shop/${c.slug}` })),
+      ...collections.filter((c) => c.show_in_menu).map((c) => ({ label: c.name, href: `/collections/${c.slug}` })),
+    ];
+    if (ticked.length) return ticked;
+    return categories.filter((c) => !c.parent && c.product_count > 0).map((c) => ({ label: c.name, href: `/shop/${c.slug}` }));
+  } catch {
+    return [];
+  }
 }
 
 export { toSummary };

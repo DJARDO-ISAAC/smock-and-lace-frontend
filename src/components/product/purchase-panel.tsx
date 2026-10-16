@@ -7,7 +7,8 @@ import type { ProductDetail, Variant } from "@/lib/api/types";
 import { apiFetch } from "@/lib/api/client";
 import { siteConfig, whatsappLink } from "@/lib/config";
 import { formatGHS } from "@/lib/money";
-import { DELIVERY_ESTIMATES } from "@/lib/shipping";
+import { useDeliveryEstimates } from "@/components/shipping/delivery-estimates";
+import { formatEta } from "@/lib/shipping";
 import { addDays, cn, formatDateRange } from "@/lib/utils";
 import { MAX_QUANTITY_PER_LINE } from "@/lib/cart/backend";
 import { useCart } from "@/stores/cart";
@@ -132,6 +133,7 @@ function BackInStock({ variant, productName }: { variant: Variant; productName: 
 const noopSubscribe = () => () => {};
 
 function DeliveryEstimate({ leadDays }: { leadDays: number }) {
+  const estimates = useDeliveryEstimates();
   // Dates depend on "today", so they render on the client only; the server shows the generic line.
   const range = useSyncExternalStore(
     noopSubscribe,
@@ -146,15 +148,17 @@ function DeliveryEstimate({ leadDays }: { leadDays: number }) {
       <p className="flex items-center gap-2 font-medium">
         <Truck className="size-4" /> {range ? <>Get it in Accra {range}</> : "Delivery across Ghana & worldwide"}
       </p>
-      <dl className="mt-3 grid grid-cols-3 gap-2 text-xs">
-        {DELIVERY_ESTIMATES.map((d) => (
-          <div key={d.zone}>
-            <dt className="text-muted">{d.zone}</dt>
-            <dd className="mt-0.5 font-medium tabular-nums">{formatGHS(d.fee, { compact: true })}</dd>
-            <dd className="text-muted">{d.eta}</dd>
-          </div>
-        ))}
-      </dl>
+      {estimates.length > 0 && (
+        <dl className="mt-3 grid grid-cols-3 gap-2 text-xs">
+          {estimates.map((d) => (
+            <div key={d.zone}>
+              <dt className="text-muted">{d.zone}</dt>
+              <dd className="mt-0.5 font-medium tabular-nums">{d.fee_from ? formatGHS(d.fee_from, { compact: true }) : "Free"}</dd>
+              <dd className="text-muted">{formatEta(d)}</dd>
+            </div>
+          ))}
+        </dl>
+      )}
     </div>
   );
 }

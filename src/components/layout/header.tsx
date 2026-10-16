@@ -5,7 +5,7 @@ import { usePathname } from "next/navigation";
 import { Suspense, useCallback, useEffect, useState } from "react";
 import { Heart, Menu, Search, ShoppingBag, User } from "lucide-react";
 import { Dialog } from "@/components/ui/dialog";
-import { mainNav, siteConfig, whatsappLink } from "@/lib/config";
+import { siteConfig, whatsappLink, type NavItem } from "@/lib/config";
 import { cn } from "@/lib/utils";
 import { useAuth } from "@/stores/auth";
 import { useCart } from "@/stores/cart";
@@ -33,10 +33,10 @@ function CountBadge({ count }: { count: number }) {
 
 const isActive = (pathname: string, href: string) => pathname === href || pathname.startsWith(`${href}/`);
 
-function DesktopNav({ pathname = "" }: { pathname?: string }) {
+function DesktopNav({ items, pathname = "" }: { items: NavItem[]; pathname?: string }) {
   return (
     <ul className="flex items-center gap-1 xl:gap-2">
-      {mainNav.map((item) => (
+      {items.map((item) => (
         <li key={item.href}>
           <Link
             href={item.href}
@@ -55,7 +55,7 @@ function DesktopNav({ pathname = "" }: { pathname?: string }) {
   );
 }
 
-function MobileNav({ pathname = "" }: { pathname?: string }) {
+function MobileNav({ items, pathname = "" }: { items: NavItem[]; pathname?: string }) {
   return (
     <ul className="divide-y divide-line">
       <li>
@@ -63,7 +63,7 @@ function MobileNav({ pathname = "" }: { pathname?: string }) {
           Shop all
         </Link>
       </li>
-      {mainNav.map((item) => (
+      {items.map((item) => (
         <li key={item.href}>
           <Link href={item.href} aria-current={isActive(pathname, item.href) ? "page" : undefined} className="flex items-center justify-between py-4 font-display text-2xl aria-[current=page]:text-clay">
             {item.label}
@@ -85,7 +85,8 @@ function OnNavigate({ onNavigate }: { onNavigate: () => void }) {
   return null;
 }
 
-export function Header() {
+/** `nav` is the full main menu: catalogue links from getMenu(), then the fixed pages. */
+export function Header({ nav }: { nav: NavItem[] }) {
   const [menuOpen, setMenuOpen] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
@@ -122,8 +123,8 @@ export function Header() {
           <Logo className="justify-self-center lg:justify-self-start" />
 
           <nav aria-label="Main" className="hidden justify-center lg:flex">
-            <Suspense fallback={<DesktopNav />}>
-              <WithPathname render={(p) => <DesktopNav pathname={p} />} />
+            <Suspense fallback={<DesktopNav items={nav} />}>
+              <WithPathname render={(p) => <DesktopNav items={nav} pathname={p} />} />
             </Suspense>
           </nav>
 
@@ -155,8 +156,8 @@ export function Header() {
             </button>
           </div>
           <nav aria-label="Mobile" className="flex-1 overflow-y-auto px-5 py-4">
-            <Suspense fallback={<MobileNav />}>
-              <WithPathname render={(p) => <MobileNav pathname={p} />} />
+            <Suspense fallback={<MobileNav items={nav} />}>
+              <WithPathname render={(p) => <MobileNav items={nav} pathname={p} />} />
             </Suspense>
             <ul className="mt-6 space-y-3 text-[0.9375rem] text-ink-soft">
               <li>

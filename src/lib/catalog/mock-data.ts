@@ -26,6 +26,7 @@ export const categories: Category[] = [
     image: null,
     product_count: 0,
     parent: null,
+    show_in_menu: true,
   },
   {
     slug: "smocks-batakari",
@@ -34,6 +35,7 @@ export const categories: Category[] = [
     image: null,
     product_count: 0,
     parent: null,
+    show_in_menu: true,
   },
   {
     slug: "womens-fugu",
@@ -42,6 +44,7 @@ export const categories: Category[] = [
     image: null,
     product_count: 0,
     parent: null,
+    show_in_menu: true,
   },
   {
     slug: "kids",
@@ -75,6 +78,7 @@ export const collections: Collection[] = [
     description: "Cloth for brides, grooms and whole bridal parties. Ask us to match your colours.",
     banner_image: null,
     is_featured: true,
+    show_in_menu: true,
   },
 ];
 

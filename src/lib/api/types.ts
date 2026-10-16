@@ -89,6 +89,8 @@ export type Category = CategoryRef & {
   image: ProductImage | null;
   product_count: number;
   parent: string | null;
+  /** Ticked "Show in menu" in the admin. Missing from APIs older than the setting. */
+  show_in_menu?: boolean;
 };
 
 export type Collection = {
@@ -97,6 +99,7 @@ export type Collection = {
   description: string;
   banner_image: ProductImage | null;
   is_featured: boolean;
+  show_in_menu?: boolean;
 };
 
 export type Variant = {
@@ -252,6 +255,15 @@ export type DeliveryOption = {
   eta_days_max: number;
   /** The method lets the customer pay the rider instead of paying online. */
   allows_pay_on_delivery?: boolean;
+};
+
+/** Starting delivery fee and time for a zone, before an address is known. */
+export type DeliveryEstimate = {
+  zone: string;
+  /** Pesewas; the cheapest paid method, or 0 if every method is free. */
+  fee_from: number;
+  eta_days_min: number;
+  eta_days_max: number;
 };
 
 export type PaymentMethod = "momo" | "card" | "pay_on_delivery";

@@ -18,23 +18,15 @@ export const siteConfig = {
   reservationMinutes: 15,
 };
 
-export const mainNav = [
-  { label: "Fugu cloth", href: "/shop/fugu-cloth" },
-  { label: "Smocks & batakari", href: "/shop/smocks-batakari" },
-  { label: "Women", href: "/shop/womens-fugu" },
-  { label: "Bridal & occasion", href: "/collections/bridal-occasion" },
+export type NavItem = { label: string; href: string };
+
+/** Fixed pages after the catalogue links in the main menu. Categories and collections come from getMenu(). */
+export const pageNav: NavItem[] = [
   { label: "Custom orders", href: "/custom-orders" },
   { label: "Our story", href: "/about" },
-] as const;
+];
 
 export const footerNav = {
-  shop: [
-    { label: "Fugu cloth", href: "/shop/fugu-cloth" },
-    { label: "Modern designs", href: "/collections/modern" },
-    { label: "Vintage designs", href: "/collections/vintage" },
-    { label: "Smocks & batakari", href: "/shop/smocks-batakari" },
-    { label: "Custom orders", href: "/custom-orders" },
-  ],
   help: [
     { label: "Size guide", href: "/size-guide" },
     { label: "Shipping & returns", href: "/shipping-returns" },

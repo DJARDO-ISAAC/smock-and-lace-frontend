@@ -2,8 +2,10 @@ import type { Metadata, Viewport } from "next";
 import { Fraunces, Inter } from "next/font/google";
 import { AppBootstrap } from "@/components/layout/providers";
 import { CartDrawer } from "@/components/cart/cart-drawer";
+import { DeliveryEstimatesProvider } from "@/components/shipping/delivery-estimates";
 import { Toaster } from "@/components/ui/toaster";
 import { siteConfig } from "@/lib/config";
+import { getDeliveryEstimates } from "@/lib/delivery-estimates";
 import "./globals.css";
 
 const heading = Fraunces({ subsets: ["latin"], variable: "--font-heading", axes: ["opsz", "SOFT"], display: "swap" });
@@ -38,15 +40,18 @@ const organisationLd = {
   telephone: "+233597708233",
 };
 
-export default function RootLayout({ children }: LayoutProps<"/">) {
+export default async function RootLayout({ children }: LayoutProps<"/">) {
+  const estimates = await getDeliveryEstimates();
   return (
     <html lang="en-GH" data-scroll-behavior="smooth" suppressHydrationWarning className={`${heading.variable} ${body.variable} antialiased`}>
       <body className="flex min-h-dvh flex-col">
         <a href="#main" className="sr-only z-50 rounded-full bg-ink px-4 py-2 text-cotton focus:not-sr-only focus:fixed focus:top-3 focus:left-3">
           Skip to content
         </a>
-        {children}
-        <CartDrawer />
+        <DeliveryEstimatesProvider estimates={estimates}>
+          {children}
+          <CartDrawer />
+        </DeliveryEstimatesProvider>
         <Toaster />
         <AppBootstrap />
         <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(organisationLd).replace(/</g, "\\u003c") }} />

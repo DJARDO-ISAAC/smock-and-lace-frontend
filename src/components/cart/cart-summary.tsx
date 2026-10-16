@@ -3,7 +3,7 @@
 import { Clock, Lock, Truck } from "lucide-react";
 import type { Cart } from "@/lib/api/types";
 import { formatGHS } from "@/lib/money";
-import { DELIVERY_ESTIMATES } from "@/lib/shipping";
+import { useDeliveryEstimates } from "@/components/shipping/delivery-estimates";
 import { LinkButton } from "@/components/ui/button";
 import { BLOCKING_WARNINGS } from "./cart-line";
 import { DiscountForm } from "./discount-form";
@@ -18,6 +18,7 @@ export function SummaryRow({ label, value, strong, tone }: { label: string; valu
 }
 
 export function CartSummary({ cart, onCheckout }: { cart: Cart; onCheckout?: () => void }) {
+  const [nearest] = useDeliveryEstimates();
   const blocked = cart.items.some((l) => l.warning && BLOCKING_WARNINGS.has(l.warning));
   return (
     <div className="space-y-5">
@@ -27,7 +28,13 @@ export function CartSummary({ cart, onCheckout }: { cart: Cart; onCheckout?: () 
         {cart.discount > 0 && <SummaryRow label={`Discount (${cart.discount_code})`} value={`−${formatGHS(cart.discount)}`} tone="leaf" />}
         <div className="flex items-baseline justify-between text-[0.9375rem]">
           <dt className="text-ink-soft">Delivery</dt>
-          <dd className="text-right text-sm text-muted">From {formatGHS(DELIVERY_ESTIMATES[0].fee, { compact: true })} in Accra</dd>
+          <dd className="text-right text-sm text-muted">
+            {!nearest
+              ? "Calculated at checkout"
+              : nearest.fee_from
+                ? `From ${formatGHS(nearest.fee_from, { compact: true })} in ${nearest.zone}`
+                : `Free in ${nearest.zone}`}
+          </dd>
         </div>
         <div className="border-t border-line pt-3">
           <SummaryRow label="Total" value={formatGHS(cart.total)} strong />
