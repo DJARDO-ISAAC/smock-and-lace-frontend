@@ -97,6 +97,7 @@ export async function getRelatedProducts(product: ProductDetail, limit = 4): Pro
 export async function getFacets(scope: { category?: string; collection?: string } = {}): Promise<Facets> {
   "use cache";
   cacheLife("hours");
+  cacheTag("products");
   if (useApi) return apiFetch<Facets>(`/products/facets/${toQueryString(scope)}`);
   const list = mock.products.filter(
     (p) =>
