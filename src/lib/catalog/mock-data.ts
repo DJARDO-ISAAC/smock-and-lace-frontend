@@ -57,7 +57,7 @@ export const categories: Category[] = [
 ];
 
 export const collections: Collection[] = [
-  { slug: "new-in", name: "New in", description: "Fresh off the loom.", banner_image: null, is_featured: true },
+  { slug: "new-in", name: "New in", description: "Fresh off the loom.", banner_image: null, is_featured: false },
   {
     slug: "modern",
     name: "Modern designs",
@@ -77,7 +77,7 @@ export const collections: Collection[] = [
     name: "Bridal & occasion",
     description: "Cloth for brides, grooms and whole bridal parties. Ask us to match your colours.",
     banner_image: null,
-    is_featured: true,
+    is_featured: false,
     show_in_menu: true,
   },
 ];

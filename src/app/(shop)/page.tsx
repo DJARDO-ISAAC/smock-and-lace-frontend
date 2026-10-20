@@ -7,13 +7,14 @@ import { Hero } from "@/components/home/hero";
 import { TrustStrip } from "@/components/home/trust-strip";
 import { CategoryTiles } from "@/components/home/category-tiles";
 import { CollectionFeature } from "@/components/home/collection-feature";
-import { DesignStyles } from "@/components/home/design-styles";
+import { FeaturedCollections } from "@/components/home/featured-collections";
 import { CustomOrdersTeaser } from "@/components/home/custom-orders-teaser";
 import { Process } from "@/components/home/process";
 import { VisitShop } from "@/components/home/visit-shop";
 
 export default async function HomePage() {
-  const [featured, cloth, garments, categories, collections, bridal, bridalProducts] = await Promise.all([
+  const [picked, popular, cloth, garments, categories, collections, bridal, bridalProducts] = await Promise.all([
+    getProducts({ featured: true, in_stock: true, ordering: "newest", page_size: 3 }),
     getProducts({ kind: "cloth", ordering: "popularity", page_size: 3, in_stock: true }),
     getProducts({ kind: "cloth", ordering: "newest", page_size: 8 }),
     getProducts({ kind: "garment", ordering: "popularity", page_size: 4 }),
@@ -22,11 +23,13 @@ export default async function HomePage() {
     getCollection("bridal-occasion"),
     getProducts({ collection: "bridal-occasion", page_size: 3, in_stock: true }),
   ]);
-  const styles = collections.filter((c) => c.slug === "vintage" || c.slug === "modern").sort((a) => (a.slug === "modern" ? -1 : 1));
+  // Products ticked Is featured lead the hero; popular cloth in stock fills any gaps.
+  const hero = [...picked.results, ...popular.results.filter((p) => !picked.results.some((f) => f.slug === p.slug))].slice(0, 3);
+  const featuredCollections = collections.filter((c) => c.is_featured);
 
   return (
     <>
-      <Hero featured={featured.results} />
+      <Hero featured={hero} />
       <TrustStrip />
 
       <section className="py-16 sm:py-24">
@@ -45,7 +48,7 @@ export default async function HomePage() {
         </Container>
       </section>
 
-      <DesignStyles collections={styles} />
+      <FeaturedCollections collections={featuredCollections} />
 
       {bridal && (
         <CollectionFeature

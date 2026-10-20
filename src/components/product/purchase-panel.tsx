@@ -53,7 +53,7 @@ function StockStatus({ variant, product }: { variant: Variant | undefined; produ
   if (product.is_made_to_order) {
     return (
       <p className="flex items-center gap-2 text-sm text-indigo">
-        <Clock className="size-4" /> Made to order. Weaving starts when you order.
+        <Clock className="size-4" /> Made to order. {isCloth ? "Weaving" : "Sewing"} starts when you order.
       </p>
     );
   }

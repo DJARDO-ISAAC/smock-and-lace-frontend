@@ -94,6 +94,7 @@ export function queryProducts(
     if (query.max_price !== undefined && p.price > query.max_price) return false;
     if (query.in_stock && !p.in_stock) return false;
     if (query.made_to_order && !p.is_made_to_order) return false;
+    if (query.featured && !p.is_featured) return false;
     return true;
   });
 

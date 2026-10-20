@@ -138,6 +138,8 @@ export type ProductSummary = {
   rating_average: number | null;
   rating_count: number;
   is_new: boolean;
+  /** Ticked Is featured in the admin: a home page pick. Missing from older APIs. */
+  is_featured?: boolean;
   created_at: string;
 };
 
@@ -179,6 +181,8 @@ export type ProductQuery = {
   max_price?: number;
   in_stock?: boolean;
   made_to_order?: boolean;
+  /** Only products ticked Is featured in the admin. */
+  featured?: boolean;
   ordering?: ProductOrdering;
   page?: number;
   page_size?: number;

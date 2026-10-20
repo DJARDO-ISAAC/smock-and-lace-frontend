@@ -3,16 +3,18 @@ import { ArrowUpRight } from "lucide-react";
 import type { Collection } from "@/lib/api/types";
 import { Container, SectionHeading } from "@/components/ui/container";
 import { ProductMedia } from "@/components/product/product-media";
+import { cn } from "@/lib/utils";
 
-/** Vintage and modern designs side by side (from the shop's own description). */
-export function DesignStyles({ collections }: { collections: Collection[] }) {
+/** Collections ticked Is featured in the admin, in their admin order. */
+export function FeaturedCollections({ collections }: { collections: Collection[] }) {
   if (!collections.length) return null;
+  const shown = collections.slice(0, 6);
   return (
     <section className="py-16 sm:py-24">
       <Container>
-        <SectionHeading eyebrow="Two ways to wear it" title="Vintage and modern designs" />
-        <ul className="mt-10 grid gap-4 sm:grid-cols-2">
-          {collections.map((c) => (
+        <SectionHeading eyebrow="Collections" title="Find your style" />
+        <ul className={cn("mt-10 grid gap-4 sm:grid-cols-2", shown.length > 2 && shown.length !== 4 && "lg:grid-cols-3")}>
+          {shown.map((c) => (
             <li key={c.slug}>
               <Link href={`/collections/${c.slug}`} className="group relative block aspect-[4/3] overflow-hidden rounded-2xl bg-cotton-deep sm:aspect-[5/4]">
                 <div className="absolute inset-0 transition-transform duration-700 group-hover:scale-105">
