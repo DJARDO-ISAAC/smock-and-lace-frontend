@@ -171,7 +171,7 @@ export function Header({ nav }: { nav: NavItem[] }) {
                 </Link>
               </li>
               <li>
-                <a href={whatsappLink("Hello Fugu Tribe, I have a question.")} target="_blank" rel="noopener noreferrer" className="flex items-center gap-3">
+                <a href={whatsappLink("Hello FuguTribe, I have a question.")} target="_blank" rel="noopener noreferrer" className="flex items-center gap-3">
                   <WhatsAppIcon className="size-5" /> Chat on WhatsApp
                 </a>
               </li>

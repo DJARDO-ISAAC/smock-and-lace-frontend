@@ -1,7 +1,7 @@
 /**
  * SAMPLE CATALOGUE for development and design review (NEXT_PUBLIC_DATA_SOURCE=mock).
  *
- * Cloth photos are Fugu Tribe's own TikTok posts (public/demo). The 6-yard piece at GH₵ 500 comes
+ * Cloth photos are FuguTribe's own TikTok posts (public/demo). The 6-yard piece at GH₵ 500 comes
  * from the shop's post; other prices, stock and the garments are placeholders. The real catalogue is
  * managed in the Django admin, and `python manage.py seed_catalogue` loads this same data there.
  */

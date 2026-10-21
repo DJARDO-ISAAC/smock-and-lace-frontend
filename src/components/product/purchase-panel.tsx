@@ -366,7 +366,7 @@ export function PurchasePanel({ product, colour, onColourChange }: { product: Pr
           <p className="mt-1 text-ink-soft">
             Not sure how much you need? Tell us the style you have in mind on{" "}
             <a
-              href={whatsappLink(`Hello Fugu Tribe, how many pieces of ${product.name} do I need for my outfit?`)}
+              href={whatsappLink(`Hello FuguTribe, how many pieces of ${product.name} do I need for my outfit?`)}
               target="_blank"
               rel="noopener noreferrer"
               className="font-medium text-ink underline underline-offset-4"

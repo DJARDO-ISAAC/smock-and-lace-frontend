@@ -1,6 +1,6 @@
 export const siteConfig = {
-  name: "Fugu Tribe",
-  legalName: "Fugu Tribe",
+  name: "FuguTribe",
+  legalName: "FuguTribe",
   tagline: "Northern Ghana heritage in luxury pieces",
   description:
     "Handwoven fugu cloth (northern kente) by the piece, ready-made smocks and batakari, and custom designs for individuals, groups and companies. Shop in Accra, delivery worldwide.",

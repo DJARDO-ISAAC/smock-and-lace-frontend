@@ -11,8 +11,8 @@ export function WhatsAppButton() {
   if (pathname.startsWith("/checkout")) return null;
   const onProduct = pathname.startsWith("/products/");
   const message = onProduct
-    ? `Hello Fugu Tribe, I'm interested in this piece: ${siteConfig.url}${pathname}`
-    : "Hello Fugu Tribe, I have a question.";
+    ? `Hello FuguTribe, I'm interested in this piece: ${siteConfig.url}${pathname}`
+    : "Hello FuguTribe, I have a question.";
 
   return (
     <aside aria-label="Chat with us">

@@ -8,7 +8,7 @@ export const metadata: Metadata = { title: "Terms of sale", alternates: { canoni
 // DRAFT: have these terms reviewed by a Ghanaian lawyer before launch.
 export default function TermsPage() {
   return (
-    <ContentPage crumb="Terms of sale" title="Terms of sale" intro="The terms that apply when you buy from Fugu Tribe.">
+    <ContentPage crumb="Terms of sale" title="Terms of sale" intro="The terms that apply when you buy from FuguTribe.">
       <div className="prose-shop">
         <h2>Prices and payment</h2>
         <p>

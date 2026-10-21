@@ -108,7 +108,7 @@ export function CustomRequestForm() {
 
   if (reference) {
     const v = getValues();
-    const summary = `Hello Fugu Tribe, I just sent custom request ${reference}: ${v.quantity} × ${NEEDS.find((n) => n.value === v.need)?.label.toLowerCase()}${v.colours ? `, colours: ${v.colours}` : ""}${v.needed_by ? `, needed by ${v.needed_by}` : ""}.`;
+    const summary = `Hello FuguTribe, I just sent custom request ${reference}: ${v.quantity} × ${NEEDS.find((n) => n.value === v.need)?.label.toLowerCase()}${v.colours ? `, colours: ${v.colours}` : ""}${v.needed_by ? `, needed by ${v.needed_by}` : ""}.`;
     return (
       <div className="rounded-3xl bg-white/80 p-8 text-center ring-1 ring-line sm:p-12" role="status">
         <CheckCircle2 className="mx-auto size-14 text-leaf" strokeWidth={1.5} />

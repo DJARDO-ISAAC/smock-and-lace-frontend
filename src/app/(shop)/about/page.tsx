@@ -6,7 +6,7 @@ import { LinkButton } from "@/components/ui/button";
 
 export const metadata: Metadata = {
   title: "Our story",
-  description: "Fugu Tribe brings northern Ghana heritage to luxury pieces: handwoven fugu cloth in vintage and modern designs, smocks, and custom work for individuals, groups and companies.",
+  description: "FuguTribe brings northern Ghana heritage to luxury pieces: handwoven fugu cloth in vintage and modern designs, smocks, and custom work for individuals, groups and companies.",
   alternates: { canonical: "/about" },
 };
 
@@ -22,12 +22,12 @@ export default function AboutPage() {
       eyebrow="Our story"
       crumb="Our story"
       title="Northern Ghana heritage in luxury pieces"
-      intro="Fugu Tribe is a fugu shop at Oyarifa Crossing in Accra. We sell handwoven fugu cloth by the piece, ready-made smocks and batakari, and custom work for weddings, families and companies, delivered across Ghana and worldwide."
+      intro="FuguTribe is a fugu shop at Oyarifa Crossing in Accra. We sell handwoven fugu cloth by the piece, ready-made smocks and batakari, and custom work for weddings, families and companies, delivered across Ghana and worldwide."
       wide
     >
       <div className="grid items-center gap-10 lg:grid-cols-2 lg:gap-16">
         <div className="relative aspect-[4/5] overflow-hidden rounded-3xl bg-cotton-deep">
-          <Image src="/demo/shop-oyarifa.jpg" alt="Shelves of folded fugu cloth at the Fugu Tribe shop" fill sizes="(min-width: 1024px) 45vw, 100vw" className="object-cover" />
+          <Image src="/demo/shop-oyarifa.jpg" alt="Shelves of folded fugu cloth at the FuguTribe shop" fill sizes="(min-width: 1024px) 45vw, 100vw" className="object-cover" />
         </div>
         <div className="prose-shop">
           <h2>Cloth with a heritage</h2>

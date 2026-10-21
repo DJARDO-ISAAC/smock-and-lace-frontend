@@ -15,10 +15,10 @@ export function LogoMark({ className }: { className?: string }) {
 
 export function Logo({ className, tone = "dark" }: { className?: string; tone?: "dark" | "light" }) {
   return (
-    <Link href="/" className={cn("group inline-flex items-center gap-2.5", tone === "light" ? "text-cotton" : "text-ink", className)} aria-label="Fugu Tribe, home">
+    <Link href="/" className={cn("group inline-flex items-center gap-2.5", tone === "light" ? "text-cotton" : "text-ink", className)} aria-label="FuguTribe, home">
       <LogoMark className="size-7 shrink-0 transition-transform duration-500 group-hover:rotate-[-4deg]" />
       <span className="font-display text-[1.375rem] leading-none tracking-tight whitespace-nowrap">
-        Fugu <span className={cn("italic", tone === "light" ? "text-kola" : "text-clay")}>Tribe</span>
+        Fugu<span className={tone === "light" ? "text-kola" : "text-clay"}>Tribe</span>
       </span>
     </Link>
   );

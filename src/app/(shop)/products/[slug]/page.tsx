@@ -3,6 +3,8 @@ import { notFound } from "next/navigation";
 import { Suspense } from "react";
 import { getProduct, getProductSlugs, getRelatedProducts } from "@/lib/catalog";
 import { siteConfig } from "@/lib/config";
+import { getDeliveryEstimates } from "@/lib/delivery-estimates";
+import { describeDelivery } from "@/lib/shipping";
 import { Breadcrumbs } from "@/components/ui/breadcrumbs";
 import { Container } from "@/components/ui/container";
 import { AccordionItem } from "@/components/ui/accordion";
@@ -77,7 +79,7 @@ async function Related({ slug }: { slug: string }) {
 
 async function ProductContent({ params }: { params: PageProps<"/products/[slug]">["params"] }) {
   const { slug } = await params;
-  const product = await getProduct(slug);
+  const [product, estimates] = await Promise.all([getProduct(slug), getDeliveryEstimates()]);
   if (!product) notFound();
 
   const details = (
@@ -93,9 +95,12 @@ async function ProductContent({ params }: { params: PageProps<"/products/[slug]"
       </AccordionItem>
       <AccordionItem title="Delivery & returns">
         <ul className="list-disc space-y-1.5 pl-5">
-          <li>Accra &amp; Tema: 1–2 working days by dispatch rider, or free pickup from our shop at Oyarifa Crossing.</li>
-          <li>Rest of Ghana: 2–4 working days, tracked.</li>
-          <li>International: 4–8 working days by DHL Express. Import duties are paid on arrival.</li>
+          {estimates.map((e) => (
+            <li key={e.zone}>
+              <strong className="font-medium text-ink">{e.zone}:</strong> {describeDelivery(e)}
+            </li>
+          ))}
+          {estimates.length === 0 && <li>Delivery options and fees are shown at checkout.</li>}
           <li>
             {product.kind === "cloth"
               ? `Return uncut, unwashed cloth within ${siteConfig.returnWindowDays} days for an exchange or refund. Cut cloth can't be returned.`

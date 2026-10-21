@@ -10,7 +10,7 @@ export function VisitShop() {
     <section className="py-16 sm:py-24">
       <Container className="grid items-center gap-10 lg:grid-cols-2 lg:gap-16">
         <div className="relative aspect-[4/5] overflow-hidden rounded-3xl bg-cotton-deep sm:aspect-[5/4] lg:aspect-[4/5]">
-          <Image src="/demo/shop-oyarifa.jpg" alt="Fugu Tribe shop at Oyarifa Crossing, shelves of folded fugu cloth" fill sizes="(min-width: 1024px) 45vw, 100vw" className="object-cover" />
+          <Image src="/demo/shop-oyarifa.jpg" alt="FuguTribe shop at Oyarifa Crossing, shelves of folded fugu cloth" fill sizes="(min-width: 1024px) 45vw, 100vw" className="object-cover" />
         </div>
         <div className="max-w-lg">
           <p className="eyebrow text-clay">Visit the shop</p>
@@ -37,7 +37,7 @@ export function VisitShop() {
             </li>
           </ul>
           <div className="mt-9 flex flex-wrap gap-3">
-            <LinkButton href={whatsappLink("Hello Fugu Tribe, I'd like to visit the shop.")} target="_blank" rel="noopener noreferrer" size="lg" className="bg-[#1f7a4d] hover:bg-[#186640]">
+            <LinkButton href={whatsappLink("Hello FuguTribe, I'd like to visit the shop.")} target="_blank" rel="noopener noreferrer" size="lg" className="bg-[#1f7a4d] hover:bg-[#186640]">
               <WhatsAppIcon className="size-4" /> WhatsApp us
             </LinkButton>
             <LinkButton href={siteConfig.tiktok} target="_blank" rel="noopener noreferrer" size="lg" variant="outline">

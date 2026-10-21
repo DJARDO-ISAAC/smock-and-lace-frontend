@@ -3,8 +3,12 @@ import Link from "next/link";
 import { ContentPage } from "@/components/content/page-shell";
 import { AccordionItem } from "@/components/ui/accordion";
 import { siteConfig, whatsappLink } from "@/lib/config";
+import { getDeliveryEstimates } from "@/lib/delivery-estimates";
+import { formatEta } from "@/lib/shipping";
 
 export const metadata: Metadata = { title: "FAQ", description: "Answers about buying fugu cloth by the piece, custom orders, payments, delivery and caring for handwoven cloth.", alternates: { canonical: "/faq" } };
+
+const DELIVERY_TIME = "How long will delivery take?";
 
 const FAQ: { group: string; items: [string, string][] }[] = [
   {
@@ -28,7 +32,8 @@ const FAQ: { group: string; items: [string, string][] }[] = [
   {
     group: "Delivery",
     items: [
-      ["How long will delivery take?", "1–2 working days in Accra and Tema, 2–4 working days elsewhere in Ghana, and 4–8 working days internationally. Made-to-order pieces ship after their lead time."],
+      // Answer filled in from the delivery zones in the admin (FaqPage).
+      [DELIVERY_TIME, ""],
       ["Do you ship outside Ghana?", "Yes, worldwide by DHL Express. Import duties are charged by your country on arrival and paid by you."],
     ],
   },
@@ -49,16 +54,21 @@ const FAQ: { group: string; items: [string, string][] }[] = [
   },
 ];
 
-export default function FaqPage() {
+export default async function FaqPage() {
+  const estimates = await getDeliveryEstimates();
+  const deliveryTimes = estimates.length
+    ? `${estimates.map((e) => `${e.zone}: ${formatEta(e)}`).join(". ")}. Made-to-order pieces ship after their lead time.`
+    : "Delivery options and times are shown at checkout, before you pay. Made-to-order pieces ship after their lead time.";
+  const faq = FAQ.map((g) => ({ ...g, items: g.items.map(([q, a]): [string, string] => [q, q === DELIVERY_TIME ? deliveryTimes : a]) }));
   const jsonLd = {
     "@context": "https://schema.org",
     "@type": "FAQPage",
-    mainEntity: FAQ.flatMap((g) => g.items.map(([q, a]) => ({ "@type": "Question", name: q, acceptedAnswer: { "@type": "Answer", text: a } }))),
+    mainEntity: faq.flatMap((g) => g.items.map(([q, a]) => ({ "@type": "Question", name: q, acceptedAnswer: { "@type": "Answer", text: a } }))),
   };
   return (
     <ContentPage crumb="FAQ" eyebrow="Help" title="Questions, answered" intro="Can't find what you need? We reply on WhatsApp within a few hours, Monday to Saturday.">
       <div className="space-y-12">
-        {FAQ.map((g) => (
+        {faq.map((g) => (
           <section key={g.group} aria-labelledby={g.group}>
             <h2 id={g.group} className="text-2xl">
               {g.group}

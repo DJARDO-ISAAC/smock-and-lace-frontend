@@ -261,6 +261,14 @@ export type DeliveryOption = {
   allows_pay_on_delivery?: boolean;
 };
 
+export type DeliveryMethodSummary = {
+  name: string;
+  description: string;
+  fee: number;
+  eta_days_min: number;
+  eta_days_max: number;
+};
+
 /** Starting delivery fee and time for a zone, before an address is known. */
 export type DeliveryEstimate = {
   zone: string;
@@ -268,6 +276,8 @@ export type DeliveryEstimate = {
   fee_from: number;
   eta_days_min: number;
   eta_days_max: number;
+  /** The zone's methods in admin order. Missing from older APIs. */
+  methods?: DeliveryMethodSummary[];
 };
 
 export type PaymentMethod = "momo" | "card" | "pay_on_delivery";

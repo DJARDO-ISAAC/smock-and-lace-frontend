@@ -1,6 +1,7 @@
 import { apiFetch, toQueryString } from "@/lib/api/client";
 import type { DeliveryEstimate, DeliveryOption } from "@/lib/api/types";
 import { siteConfig } from "@/lib/config";
+import { formatGHS } from "@/lib/money";
 
 export const GHANA_REGIONS = [
   "Greater Accra",
@@ -79,11 +80,24 @@ export function mockEstimates(): DeliveryEstimate[] {
       fee_from: Math.min(...priced.map((m) => m.fee)),
       eta_days_min: Math.min(...priced.map((m) => m.eta_days_min)),
       eta_days_max: Math.max(...priced.map((m) => m.eta_days_max)),
+      methods: methods.map(({ name, description, fee, eta_days_min, eta_days_max }) => ({ name, description, fee, eta_days_min, eta_days_max })),
     };
   });
 }
 
-export function formatEta({ eta_days_min: min, eta_days_max: max }: DeliveryEstimate) {
+export function formatEta({ eta_days_min: min, eta_days_max: max }: { eta_days_min: number; eta_days_max: number }) {
   if (min === max) return `${min} working day${min === 1 ? "" : "s"}`;
   return `${min}–${max} working days`;
+}
+
+const asSentence = (text: string) => text.trim().replace(/[.!]?$/, ".");
+const feeLabel = (fee: number) => (fee ? formatGHS(fee, { compact: true }) : "free");
+
+/** A zone's delivery in words, from its methods in the admin, e.g.
+ * "Dispatch rider, GH₵ 40, 1–2 working days. Delivered to your door. Or Pickup at Oyarifa Crossing, free, 1 working day." */
+export function describeDelivery(estimate: DeliveryEstimate) {
+  if (!estimate.methods?.length) return asSentence(`From ${feeLabel(estimate.fee_from)}, ${formatEta(estimate)}`);
+  return estimate.methods
+    .map((m, i) => `${i ? "Or " : ""}${asSentence(`${m.name}, ${feeLabel(m.fee)}, ${formatEta(m)}`)}${m.description ? ` ${asSentence(m.description)}` : ""}`)
+    .join(" ");
 }

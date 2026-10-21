@@ -5,7 +5,7 @@ import { Listing, ListingHeader } from "@/components/shop/listing";
 
 export const metadata: Metadata = {
   title: "Shop all",
-  description: "Handwoven fugu cloth by the piece, ready-made smocks and batakari, and women's fugu from Fugu Tribe, Accra.",
+  description: "Handwoven fugu cloth by the piece, ready-made smocks and batakari, and women's fugu from FuguTribe, Accra.",
   alternates: { canonical: "/shop" },
 };
 

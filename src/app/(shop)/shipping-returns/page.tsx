@@ -3,7 +3,7 @@ import { ContentPage } from "@/components/content/page-shell";
 import { siteConfig } from "@/lib/config";
 import { formatGHS } from "@/lib/money";
 import { getDeliveryEstimates } from "@/lib/delivery-estimates";
-import { formatEta } from "@/lib/shipping";
+import { describeDelivery, formatEta } from "@/lib/shipping";
 
 export const metadata: Metadata = { title: "Shipping & returns", description: "Delivery fees and times across Ghana and worldwide, and our returns policy.", alternates: { canonical: "/shipping-returns" } };
 
@@ -47,15 +47,11 @@ export default async function ShippingPage() {
       <div className="prose-shop mt-12">
         <h2>Delivery</h2>
         <ul>
-          <li>
-            <strong>Accra &amp; Tema:</strong> our dispatch riders deliver in 1–2 working days. You can also collect free from our shop at Oyarifa Crossing.
-          </li>
-          <li>
-            <strong>Rest of Ghana:</strong> tracked courier delivery in 2–4 working days.
-          </li>
-          <li>
-            <strong>International:</strong> DHL Express in 4–8 working days. Import duties and taxes are charged by your country on arrival and are paid by you.
-          </li>
+          {estimates.map((e) => (
+            <li key={e.zone}>
+              <strong>{e.zone}:</strong> {describeDelivery(e)}
+            </li>
+          ))}
           <li>
             <strong>Made-to-order pieces</strong> ship once they are woven and sewn. The lead time is shown on the product page and at checkout, and your order page shows
             the expected ship date.

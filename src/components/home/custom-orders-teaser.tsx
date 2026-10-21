@@ -33,7 +33,7 @@ export function CustomOrdersTeaser() {
           <LinkButton href="/custom-orders" size="lg">
             Start a custom order <ArrowRight className="size-4" />
           </LinkButton>
-          <LinkButton href={whatsappLink("Hello Fugu Tribe, I'd like to talk about a custom order.")} target="_blank" rel="noopener noreferrer" size="lg" variant="outline">
+          <LinkButton href={whatsappLink("Hello FuguTribe, I'd like to talk about a custom order.")} target="_blank" rel="noopener noreferrer" size="lg" variant="outline">
             Chat on WhatsApp
           </LinkButton>
         </div>

@@ -1,6 +1,6 @@
-# Fugu Tribe storefront
+# FuguTribe storefront
 
-Next.js storefront for Fugu Tribe, a fugu shop at Oyarifa Crossing, Accra: handwoven fugu cloth sold by the piece, ready-made smocks and batakari, and custom orders for individuals, groups and companies. It talks only to the Django API in `../smock-and-lace-backend` (SRS sections 3 and 9).
+Next.js storefront for FuguTribe, a fugu shop at Oyarifa Crossing, Accra: handwoven fugu cloth sold by the piece, ready-made smocks and batakari, and custom orders for individuals, groups and companies. It talks only to the Django API in `../smock-and-lace-backend` (SRS sections 3 and 9).
 
 **Stack:** Next.js 16 (App Router, Cache Components), React 19, TypeScript, Tailwind CSS 4, Zustand, React Hook Form and Zod.
 
@@ -83,7 +83,7 @@ Products have a `kind`:
 ## Placeholder content to replace before launch
 
 - **Product photos:** cards and galleries draw generated strip-cloth artwork (`ProductArt`) whenever an image has no `url`, in both modes (`src/lib/catalog/art.ts`). Photos uploaded in the Django admin replace it automatically.
-- **Sample catalogue:** the 13 cloth designs use Fugu Tribe's own TikTok photos (`public/demo`) at GH₵ 500 per 6-yard piece (from the shop's post; vintage designs at GH₵ 550 are a guess). The garments are placeholders drawn as artwork. Load the same catalogue into Django with `python manage.py seed_catalogue`.
+- **Sample catalogue:** the 13 cloth designs use FuguTribe's own TikTok photos (`public/demo`) at GH₵ 500 per 6-yard piece (from the shop's post; vintage designs at GH₵ 550 are a guess). The garments are placeholders drawn as artwork. Load the same catalogue into Django with `python manage.py seed_catalogue`.
 - **Contact details:** phone, email, address and TikTok are in `src/lib/config.ts`. Opening hours aren't shown yet.
 - **Policies:** the privacy policy and terms of sale are drafts and need legal review (Act 843).
 - **Delivery fees and zones:** sample values are in `src/lib/shipping.ts` until the shipping app exists.

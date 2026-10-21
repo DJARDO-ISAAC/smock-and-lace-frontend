@@ -4,10 +4,10 @@ import { ContentPage } from "@/components/content/page-shell";
 import { TikTokIcon, WhatsAppIcon } from "@/components/ui/icons";
 import { siteConfig, whatsappLink } from "@/lib/config";
 
-export const metadata: Metadata = { title: "Contact us", description: "Call or WhatsApp Fugu Tribe on 059 770 8233, email fugutribe@gmail.com, or visit our shop at Oyarifa Crossing, Accra.", alternates: { canonical: "/contact" } };
+export const metadata: Metadata = { title: "Contact us", description: "Call or WhatsApp FuguTribe on 059 770 8233, email fugutribe@gmail.com, or visit our shop at Oyarifa Crossing, Accra.", alternates: { canonical: "/contact" } };
 
 const CHANNELS = [
-  { icon: WhatsAppIcon, title: "WhatsApp", text: "Fastest for choosing cloth, custom orders and order updates.", cta: "Start a chat", href: whatsappLink("Hello Fugu Tribe, I have a question."), external: true, primary: true },
+  { icon: WhatsAppIcon, title: "WhatsApp", text: "Fastest for choosing cloth, custom orders and order updates.", cta: "Start a chat", href: whatsappLink("Hello FuguTribe, I have a question."), external: true, primary: true },
   { icon: Phone, title: "Call", text: siteConfig.phoneDisplay, cta: "Call us", href: `tel:+${siteConfig.whatsappNumber}` },
   { icon: Mail, title: "Email", text: siteConfig.email, cta: "Send an email", href: `mailto:${siteConfig.email}` },
   { icon: TikTokIcon, title: "TikTok", text: siteConfig.tiktokHandle, cta: "See new cloth", href: siteConfig.tiktok, external: true },
