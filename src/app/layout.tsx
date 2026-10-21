@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from "next";
-import { Fraunces, Inter } from "next/font/google";
+import { Fraunces, Commissioner } from "next/font/google";
 import { AppBootstrap } from "@/components/layout/providers";
 import { CartDrawer } from "@/components/cart/cart-drawer";
 import { DeliveryEstimatesProvider } from "@/components/shipping/delivery-estimates";
@@ -9,7 +9,8 @@ import { getDeliveryEstimates } from "@/lib/delivery-estimates";
 import "./globals.css";
 
 const heading = Fraunces({ subsets: ["latin"], variable: "--font-heading", axes: ["opsz", "SOFT"], display: "swap" });
-const body = Inter({ subsets: ["latin"], variable: "--font-body", display: "swap" });
+// Body text and prices. Chosen partly because it has the cedi sign (₵); many popular sans fonts do not.
+const body = Commissioner({ subsets: ["latin"], variable: "--font-body", display: "swap" });
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteConfig.url),
