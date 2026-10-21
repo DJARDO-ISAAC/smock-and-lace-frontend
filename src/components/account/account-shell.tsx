@@ -19,7 +19,7 @@ const NAV = [
 
 /**
  * Account page frame. Pages that need a signed-in customer pass requireAuth;
- * the wishlist works for guests too (it lives in the browser).
+ * the wishlist works for guests too (kept in the browser until they sign in, then saved to their account).
  */
 export function AccountShell({ active, title, description, children, requireAuth = true, action }: { active: string; title: string; description?: string; children: ReactNode; requireAuth?: boolean; action?: ReactNode }) {
   const { status, user, logout } = useAuth();

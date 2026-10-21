@@ -5,7 +5,8 @@ import { useAuth } from "@/stores/auth";
 import { useCart } from "@/stores/cart";
 import { useSaved } from "@/stores/saved";
 
-/** Restores the session (refresh cookie), loads the cart and rehydrates saved items once on boot. */
+/** Restores the session (refresh cookie), loads the cart and rehydrates saved items once on boot,
+ * then keeps the cart and wishlist in step with sign-in and sign-out. */
 export function AppBootstrap() {
   const status = useAuth((s) => s.status);
   const bootstrap = useAuth((s) => s.bootstrap);
@@ -20,6 +21,12 @@ export function AppBootstrap() {
   useEffect(() => {
     if (status !== "unknown") loadCart();
   }, [status, loadCart]);
+
+  // Signed in: merge a guest wishlist into the account. Signed out: drop the account's list from this device.
+  useEffect(() => {
+    if (status === "authenticated") useSaved.getState().syncWithAccount();
+    if (status === "anonymous") useSaved.getState().forgetAccount();
+  }, [status]);
 
   return null;
 }
