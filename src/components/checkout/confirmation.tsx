@@ -154,11 +154,7 @@ export function Confirmation({ number }: { number: string }) {
 
       <div className="mt-10 rounded-3xl bg-white/80 p-6 ring-1 ring-line sm:p-8">
         <OrderTimeline order={order} />
-        {order.expected_ship_date && (
-          <p className="mt-6 flex items-center gap-2 rounded-xl bg-indigo-soft px-4 py-3 text-sm text-indigo">
-            <Clock className="size-4 shrink-0" /> Expected to ship by {formatDate(order.expected_ship_date, { weekday: "long", day: "numeric", month: "long" })}
-          </p>
-        )}
+        <DeliveryNote order={order} />
       </div>
 
       <div className="mt-6 grid gap-6 sm:grid-cols-[1.4fr_1fr]">
@@ -234,5 +230,28 @@ export function Confirmation({ number }: { number: string }) {
         </LinkButton>
       </div>
     </div>
+  );
+}
+
+/** One line under the timeline that matches where the order is: when it ships, when it shipped, or when it arrived. */
+function DeliveryNote({ order }: { order: Order }) {
+  const on = (status: string) => order.status_history.find((h) => h.status === status)?.at;
+  const long = { weekday: "long", day: "numeric", month: "long" } as const;
+  let text: string | null = null;
+  if (["paid", "processing"].includes(order.status) && order.expected_ship_date) {
+    text = `Expected to ship by ${formatDate(order.expected_ship_date, long)}`;
+  } else if (order.status === "shipped") {
+    const shipped = on("shipped");
+    const how = [order.courier && `with ${order.courier}`, order.tracking_number && `tracking ${order.tracking_number}`].filter(Boolean).join(", ");
+    text = `Shipped${shipped ? ` on ${formatDate(shipped, long)}` : ""}${how ? ` ${how}` : ""}`;
+  } else if (order.status === "delivered") {
+    const delivered = on("delivered");
+    text = delivered ? `Delivered on ${formatDate(delivered, long)}` : "Delivered";
+  }
+  if (!text) return null;
+  return (
+    <p className="mt-6 flex items-center gap-2 rounded-xl bg-indigo-soft px-4 py-3 text-sm text-indigo">
+      <Clock className="size-4 shrink-0" /> {text}
+    </p>
   );
 }
