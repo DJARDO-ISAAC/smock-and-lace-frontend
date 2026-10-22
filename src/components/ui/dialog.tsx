@@ -65,11 +65,9 @@ export function Dialog({
       onClick={(e) => {
         if (e.target === e.currentTarget) onClose();
       }}
-      className={cn(
-        "max-w-none bg-transparent p-0 backdrop:bg-ink/40 backdrop:backdrop-blur-[2px] open:flex",
-        side === "bottom" && "mb-0 w-full",
-        side !== "center" && "m-0 h-dvh max-h-none w-full",
-      )}
+      // The dialog fills the viewport and positions the panel inside it. Tailwind's reset zeroes the browser's
+      // margin: auto, which is what would otherwise centre a <dialog>, so a centred modal sat in the top-left corner.
+      className="m-0 h-dvh max-h-none w-full max-w-none bg-transparent p-0 backdrop:bg-ink/40 backdrop:backdrop-blur-[2px] open:flex"
     >
       <div className={cn("flex flex-col overflow-hidden bg-cotton shadow-lift", panel[side], className)}>
         {!hideTitle && (
