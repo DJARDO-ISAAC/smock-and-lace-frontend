@@ -38,7 +38,8 @@ export function CollectionFeature({
             )}
           </div>
         </div>
-        <ul className="-mx-4 flex snap-x snap-mandatory gap-4 overflow-x-auto px-4 pb-2 scrollbar-none sm:mx-0 sm:grid sm:grid-cols-3 sm:overflow-visible sm:px-0">
+        {/* scroll-px-4: snapping keeps the 16px side padding, instead of pulling the first card flush to the screen edge. */}
+        <ul className="-mx-4 flex snap-x snap-mandatory scroll-px-4 gap-4 overflow-x-auto px-4 pb-2 scrollbar-none sm:mx-0 sm:grid sm:grid-cols-3 sm:overflow-visible sm:px-0">
           {products.slice(0, 3).map((p) => (
             <li key={p.id} className="w-[68%] shrink-0 snap-start sm:w-auto">
               <Link href={`/products/${p.slug}`} className="group block">
