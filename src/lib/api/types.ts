@@ -152,6 +152,15 @@ export type Review = {
   location: string;
   created_at: string;
   is_verified_buyer: boolean;
+  /** Customer photo URLs. Missing from older APIs. */
+  photos?: string[];
+};
+
+/** Whether the visitor may review a product (GET /products/<slug>/review-status/). */
+export type ReviewStatus = {
+  can_review: boolean;
+  reason: "sign_in" | "not_received" | "already_reviewed" | null;
+  review: { rating: number; is_approved: boolean } | null;
 };
 
 export type ProductDetail = ProductSummary & {

@@ -73,7 +73,14 @@ function OrderCard({ order }: { order: Order }) {
                 <Link href={`/products/${item.product_slug}`} className="hover:underline">
                   {item.product_name} <span className="text-muted">· {[item.colour, item.size].filter(Boolean).join(" · ")} × {item.quantity}</span>
                 </Link>
-                <span className="tabular-nums">{formatGHS(item.line_total, { compact: true })}</span>
+                <span className="flex items-center gap-4">
+                  {order.status === "delivered" && (
+                    <Link href={`/products/${item.product_slug}#reviews`} className="font-medium whitespace-nowrap underline underline-offset-4">
+                      Review this piece
+                    </Link>
+                  )}
+                  <span className="tabular-nums">{formatGHS(item.line_total, { compact: true })}</span>
+                </span>
               </li>
             ))}
           </ul>

@@ -2,6 +2,7 @@ import { BadgeCheck } from "lucide-react";
 import type { ProductDetail } from "@/lib/api/types";
 import { Stars } from "@/components/ui/rating";
 import { formatDate } from "@/lib/utils";
+import { ReviewForm } from "./review-form";
 
 export function Reviews({ product }: { product: ProductDetail }) {
   const { reviews, rating_average: avg, rating_count: count } = product;
@@ -40,32 +41,45 @@ export function Reviews({ product }: { product: ProductDetail }) {
           <p className="mt-6 text-sm text-muted">Only verified buyers can review. Every review is checked by our team before it appears.</p>
         </div>
 
-        {reviews.length > 0 ? (
-          <ul className="divide-y divide-line border-y border-line">
-            {reviews.map((r) => (
-              <li key={r.id} className="py-7">
-                <div className="flex flex-wrap items-center justify-between gap-2">
-                  <Stars value={r.rating} />
-                  <time dateTime={r.created_at} className="text-sm text-muted">
-                    {formatDate(r.created_at)}
-                  </time>
-                </div>
-                {r.title && <h3 className="mt-3 font-sans text-base font-semibold">{r.title}</h3>}
-                <p className="mt-2 leading-relaxed text-ink-soft">{r.body}</p>
-                <p className="mt-3 flex items-center gap-2 text-sm text-muted">
-                  <span className="font-medium text-ink">{r.author_name}</span> · {r.location}
-                  {r.is_verified_buyer && (
-                    <span className="inline-flex items-center gap-1 text-leaf">
-                      <BadgeCheck className="size-4" /> Verified buyer
-                    </span>
+        <div className="space-y-8">
+          <ReviewForm slug={product.slug} />
+          {reviews.length > 0 && (
+            <ul className="divide-y divide-line border-y border-line">
+              {reviews.map((r) => (
+                <li key={r.id} className="py-7">
+                  <div className="flex flex-wrap items-center justify-between gap-2">
+                    <Stars value={r.rating} />
+                    <time dateTime={r.created_at} className="text-sm text-muted">
+                      {formatDate(r.created_at)}
+                    </time>
+                  </div>
+                  {r.title && <h3 className="mt-3 font-sans text-base font-semibold">{r.title}</h3>}
+                  <p className="mt-2 leading-relaxed text-ink-soft">{r.body}</p>
+                  {r.photos && r.photos.length > 0 && (
+                    <ul className="mt-4 flex flex-wrap gap-2" aria-label="Customer photos">
+                      {r.photos.map((url, i) => (
+                        <li key={url}>
+                          <a href={url} target="_blank" rel="noopener noreferrer" className="block size-20 overflow-hidden rounded-lg ring-1 ring-line hover:ring-ink sm:size-24">
+                            {/* eslint-disable-next-line @next/next/no-img-element -- customer uploads from any media host */}
+                            <img src={url} alt={`Photo ${i + 1} from ${r.author_name}`} loading="lazy" className="size-full object-cover" />
+                          </a>
+                        </li>
+                      ))}
+                    </ul>
                   )}
-                </p>
-              </li>
-            ))}
-          </ul>
-        ) : (
-          <div className="rounded-2xl border border-dashed border-line p-10 text-center text-muted">Bought this piece? Your review will help others choose.</div>
-        )}
+                  <p className="mt-3 flex items-center gap-2 text-sm text-muted">
+                    <span className="font-medium text-ink">{r.author_name}</span> · {r.location}
+                    {r.is_verified_buyer && (
+                      <span className="inline-flex items-center gap-1 text-leaf">
+                        <BadgeCheck className="size-4" /> Verified buyer
+                      </span>
+                    )}
+                  </p>
+                </li>
+              ))}
+            </ul>
+          )}
+        </div>
       </div>
     </section>
   );

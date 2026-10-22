@@ -41,7 +41,9 @@ export async function apiFetch<T>(path: string, options: RequestOptions = {}): P
   const { body, token, cartToken, onResponse, headers, ...init } = options;
   const finalHeaders = new Headers(headers);
   finalHeaders.set("Accept", "application/json");
-  if (body !== undefined) finalHeaders.set("Content-Type", "application/json");
+  // FormData (file uploads) is sent as-is; the browser sets its multipart Content-Type and boundary.
+  const isForm = typeof FormData !== "undefined" && body instanceof FormData;
+  if (body !== undefined && !isForm) finalHeaders.set("Content-Type", "application/json");
   if (token) finalHeaders.set("Authorization", `Bearer ${token}`);
   if (cartToken) finalHeaders.set("X-Cart-Token", cartToken);
 
@@ -50,7 +52,7 @@ export async function apiFetch<T>(path: string, options: RequestOptions = {}): P
     response = await fetch(`${siteConfig.apiUrl}${path}`, {
       ...init,
       headers: finalHeaders,
-      body: body === undefined ? undefined : JSON.stringify(body),
+      body: body === undefined ? undefined : isForm ? body : JSON.stringify(body),
       // The refresh token lives in an httpOnly cookie scoped to /api/v1/auth/.
       credentials: "include",
     });
