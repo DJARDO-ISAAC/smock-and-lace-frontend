@@ -38,7 +38,7 @@ export function Reviews({ product }: { product: ProductDetail }) {
           ) : (
             <p className="mt-4 text-muted">No reviews yet.</p>
           )}
-          <p className="mt-6 text-sm text-muted">Only verified buyers can review. Every review is checked by our team before it appears.</p>
+          <p className="mt-6 text-sm text-muted">Reviews come from verified buyers only.</p>
         </div>
 
         <div className="space-y-8">

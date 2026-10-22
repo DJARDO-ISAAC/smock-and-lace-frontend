@@ -320,6 +320,8 @@ export type OrderStatus =
   | "return_requested";
 
 export type OrderItem = {
+  /** Order line id, used to choose items for a return. Missing from older APIs and sample data. */
+  id?: number;
   product_name: string;
   product_slug: string;
   size: string;
@@ -353,8 +355,21 @@ export type Order = {
   courier: string;
   created_at: string;
   status_history: { status: OrderStatus; at: string; note: string }[];
+  /** Last moment a return can be requested; null before delivery. Missing from older APIs. */
+  return_until?: string | null;
+  return_request?: ReturnRequestSummary | null;
   /** Only in the checkout response: lets a guest open this order later. */
   access_key?: string;
+};
+
+export type ReturnReason = "wrong_size" | "not_as_expected" | "damaged" | "wrong_item" | "changed_mind" | "other";
+
+export type ReturnRequestSummary = {
+  reason: ReturnReason;
+  reason_label: string;
+  note: string;
+  items: { id: number; quantity: number }[];
+  created_at: string;
 };
 
 export type CheckoutResult = {

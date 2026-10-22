@@ -4,7 +4,6 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 import { ChevronDown, Package } from "lucide-react";
 import type { Order } from "@/lib/api/types";
-import { apiFetch } from "@/lib/api/client";
 import { fetchOrders } from "@/lib/checkout";
 import { siteConfig } from "@/lib/config";
 import { formatGHS } from "@/lib/money";
@@ -17,13 +16,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { ProductMedia } from "@/components/product/product-media";
 import { AccountShell } from "./account-shell";
 import { OrderTimeline, STATUS_LABELS, STATUS_TONES } from "./order-timeline";
-
-function canRequestReturn(order: Order) {
-  if (order.status !== "delivered") return false;
-  if (order.items.every((i) => i.is_made_to_order)) return false;
-  const deliveredAt = order.status_history.find((h) => h.status === "delivered")?.at ?? order.created_at;
-  return Date.now() - new Date(deliveredAt).getTime() < siteConfig.returnWindowDays * 86400000;
-}
+import { ReturnRequest, canRequestReturn } from "./return-request";
 
 /** The invoice endpoint needs the bearer token, so fetch it and hand the browser a blob (FR-ACC-4). */
 async function downloadInvoice(number: string, access: string | null) {
@@ -39,7 +32,7 @@ async function downloadInvoice(number: string, access: string | null) {
   }
 }
 
-function OrderCard({ order }: { order: Order }) {
+function OrderCard({ order, onUpdate }: { order: Order; onUpdate: (order: Order) => void }) {
   const access = useAuth((s) => s.access);
   const [open, setOpen] = useState(false);
   return (
@@ -64,6 +57,12 @@ function OrderCard({ order }: { order: Order }) {
       {open && (
         <div className="space-y-6 border-t border-line p-5 sm:p-6">
           <OrderTimeline order={order} />
+          {order.status === "return_requested" && (
+            <p className="rounded-xl bg-clay-soft px-4 py-3 text-sm text-clay-deep">
+              Return requested{order.return_request ? `: ${order.return_request.reason_label}` : ""}. We&apos;ll be in touch within one working day to arrange
+              pickup or send instructions.
+            </p>
+          )}
           {order.expected_ship_date && ["paid", "processing"].includes(order.status) && (
             <p className="text-sm text-indigo">Expected to ship by {formatDate(order.expected_ship_date, { weekday: "long", day: "numeric", month: "long" })}</p>
           )}
@@ -93,22 +92,7 @@ function OrderCard({ order }: { order: Order }) {
                 Download invoice (PDF)
               </button>
             )}
-            {canRequestReturn(order) && (
-              <button
-                type="button"
-                className="inline-flex h-9 items-center rounded-full border border-ink/20 px-4 text-sm font-medium hover:border-ink"
-                onClick={async () => {
-                  try {
-                    if (siteConfig.dataSource === "api") await apiFetch(`/orders/${order.number}/return-request/`, { method: "POST", token: access, body: { reason: "" } });
-                    toast({ title: "Return requested", description: "We'll be in touch within one working day.", tone: "success" });
-                  } catch (e) {
-                    toast({ title: (e as Error).message, tone: "error" });
-                  }
-                }}
-              >
-                Request a return
-              </button>
-            )}
+            {canRequestReturn(order) && <ReturnRequest order={order} onRequested={onUpdate} />}
           </div>
         </div>
       )}
@@ -151,7 +135,7 @@ export function Orders() {
       ) : (
         <ul className="space-y-4">
           {orders.map((o) => (
-            <OrderCard key={o.number} order={o} />
+            <OrderCard key={o.number} order={o} onUpdate={(updated) => setOrders((all) => all?.map((x) => (x.number === updated.number ? updated : x)) ?? null)} />
           ))}
         </ul>
       )}
